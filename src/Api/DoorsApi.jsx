@@ -16,7 +16,7 @@ export const addDoor = async (newDoor) => {
          .then(res => res.data)
   );
      
-      
+
       // מחזירים את התגובה מהשרת
     // } catch (error) {
       // טיפול בשגיאות והחזרת שגיאה מתאימה אם קרתה בעיה
@@ -41,4 +41,12 @@ export const getDoors = async () => {
     axios.get("https://localhost:7253/api/Door/GetAll")
       .then(res => res.data)
   );
-};
+}; 
+export const deleteDoorById = async (id) => {
+
+       return fetchWithRetry(() =>
+         axios.delete(`https://localhost:7253/api/Door/Delete?id=${id}`)
+           .then(res => res.data)
+   );   
+
+       }

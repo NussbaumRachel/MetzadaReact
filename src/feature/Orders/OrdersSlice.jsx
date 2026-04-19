@@ -21,7 +21,7 @@ export const addNewOrderAsync = createAsyncThunk(
   "orders/addNewOrderAsync",
   async (order,{ dispatch }) => {
     const newOrder = {
-      id: order.existingOrder.id || 0,
+      id: order.existingOrder?.id || 0,
       custId: "1234",
       custName: order.custName,
       deliveryDate: order.deliveryDate,
@@ -38,21 +38,21 @@ export const addNewOrderAsync = createAsyncThunk(
 console.log("vbnmvbn");
 
     for (let i = 0; i < order.orderItems.length; i++) {
-      if (order.orderItems[i].itemType === 1) {
+      if (order.orderItems[i].itemType === 1 ||order.orderItems[i].itemType === "1") {
         
         let id = await dispatch(createDoor(order.orderItems[i].doorDetails));
-        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder.id || 0, itemType: "1", itemId: id.payload, quantity: order.orderItems[i].quantity });
+        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "1", itemId: id.payload, quantity: order.orderItems[i].quantity });
       }
-       else if (order.orderItems[i].itemType === 2) {
+       else if (order.orderItems[i].itemType === 2 || order.orderItems[i].itemType === "2") {
         
         let id = await dispatch(createFrame(order.orderItems[i].frameDetails));
-        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder.id || 0, itemType: "2", itemId: id.payload, quantity: order.orderItems[i].quantity });
+        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "2", itemId: id.payload, quantity: order.orderItems[i].quantity });
       }
     }
     console.log(newOrder, "before adding order");
     console.log("order.existingOrder",order.existingOrder);
     
-   if(!order.existingOrder)
+   if(order.existingOrder==null)
      await dispatch(createOrder(newOrder))
     else 
   await dispatch(updateOrder(newOrder))
@@ -64,15 +64,7 @@ const ordersSlice = createSlice({
   name: "orders", // שם הסלייס
   initialState,   // מצב התחלתי
   reducers: {
-    // addNewOrder:(state,action) =>{
-    //   debugger
-    //   const order = action.payload
-    //   for (let i = 0; i < order.orderItems.length; i++) {
-    //     if (order.orderItems[i].orderType == "door")
-    //     {createDoor(order.orderItems[i].doorDetails)}
-    //   }
-    // }
-    // אפשר להוסיף reducers נוספים בעת הצורך (למשל, להוריד הזמנה או לעדכן סטטוס)
+   
   },
   extraReducers: (builder) => {
     builder

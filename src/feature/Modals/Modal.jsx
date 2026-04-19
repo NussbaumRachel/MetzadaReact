@@ -2,7 +2,7 @@
 //  * קומפוננטת Modal כללית להצגת פרטים/עריכה
 //  */
 import React from 'react';
-import './orders.css';
+import '../Orders/orders.css';
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 

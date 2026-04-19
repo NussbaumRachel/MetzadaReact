@@ -50,13 +50,13 @@
 
 // //   const dis = useDispatch()
 // //   const getDoorById =(id) => {
-          
+
 // //             let d = doors.filter(d => d.id != id)
 // //             console.log("d : ", d);
 // //             return d
 // //         }
 // //  useEffect(() => {
- 
+
 // //         getDoorById(item.itemId)
 // //  }
 //     // , []);
@@ -101,7 +101,7 @@
 //   //   , []);
 
 
- 
+
 //   const getOptions = (field) => {
 //     return possibleValues.find(v => v.field === field)?.limits || [];
 //   };
@@ -261,7 +261,7 @@ import { useSelector } from "react-redux";
  */
 const OrderItem = ({ index, item, updateItem }) => {
   const doors = useSelector(state => state.doors.doors);
-    const frames = useSelector(state => state.frames.frames);
+  const frames = useSelector(state => state.frames.frames);
 
   const possibleValues = useSelector(state => state.possibleValues.possibleValues);
 
@@ -322,47 +322,51 @@ const OrderItem = ({ index, item, updateItem }) => {
     // if (item.orderType === "1" && item.doorDetails) {
     //   updated.doorDetails = { ...orderDetails.doorDetails, ...item.doorDetails };
     // }
-if (doors.length > 0 && item.itemId !=0 && item.itemType === 1) {
-        const door = doors.find(d => d.id === item.itemId);
-        if (door) {
-            updated = { ...updated, doorDetails: door,quantity:item.quantity,itemType:"1" };
-        }
+    if (doors.length > 0 && item.itemId != 0 && item.itemType === 1) {
+      const door = doors.find(d => d.id === item.itemId);
+      if (door) {
+        updated = { ...updated, doorDetails: door, quantity: item.quantity, itemType: "1" };
+        updateItem(index, updated);
+      }
     }
     // מוודאים שפרטי משקוף קיימים אם הפריט הוא משקוף
-    if (doors.length > 0 && item.itemId !=0 && item.itemType === 2) {
-        const frame = frames.find(d => d.id === item.itemId);
-        if (frame) {
-            updated = { ...updated, frameDetails: frame ,itemType:"2",quantity:item.quantity};
-        }
+    if (doors.length > 0 && item.itemId != 0 && item.itemType === 2) {
+      const frame = frames.find(d => d.id === item.itemId);
+      if (frame) {
+        updated = { ...updated, frameDetails: frame, itemType: "2", quantity: item.quantity };
+        updateItem(index, updated);
+      }
     }
-console.log("updated",updated);
-
+    console.log("updated", updated);
     setOrderDetails(updated);
-  }, [item]);
+  }, []);
 
   // שינוי סוג פריט (דלת/משקוף) או כמות
   const handleDoorFrameChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     const updated = { ...orderDetails, [name]: value };
+    console.log("updated", updated);
+
     setOrderDetails(updated);
     updateItem(index, updated);
   };
 
   // שינוי כל שדה בפרטי דלת או משקוף
   const handleInputChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     const [section, field] = name.split(".");
     const updated = {
       ...orderDetails,
       [section]: { ...orderDetails[section], [field]: value }
     };
+    console.log("updated", updated);
+
     setOrderDetails(updated);
     updateItem(index, updated);
   };
-const function1 = () => {
-console.log("orders");
 
-}
   return (
     <div className="order-item">
       <div className="form-group">

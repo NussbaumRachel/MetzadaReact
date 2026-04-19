@@ -3,7 +3,7 @@ import * as XLSX from "xlsx";
 import axios from 'axios'
 import AddOrder from "./addOrder";
 import './orders.css'
-import Modal from "./Modal";
+import Modal from "../Modals/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllDoors } from "../Doors/DoorsSlice";
 import { getAllOrders } from "../Orders/OrdersSlice"
@@ -13,7 +13,7 @@ import { fetchLimits } from "../PossibleValues/PossibleValuesSlice";
 function AllOrders() {
     const orders = useSelector(state => state.orders.orders)
     const statusO = useSelector(state => state.orders.status)
-        const statusD = useSelector(state => state.doors.status)
+    const statusD = useSelector(state => state.doors.status)
     const statusL = useSelector(state => state.possibleValues.status)
     const statusF = useSelector(state => state.frames.status)
     const [active, setActive] = useState("הזמנות");
@@ -35,45 +35,45 @@ function AllOrders() {
     };
     const dis = useDispatch()
     const [loading, setLoading] = useState(true);
-//     useEffect(
-//         () => {
-//             if (status == "") {
-//                 console.log("status", status);
-//                 dis(getAllOrders());
-//                 dis(fetchLimits());
-//                 setLoading(false);
-//             }
-//         }
-//         , [status, dis]
-//     )
+    //     useEffect(
+    //         () => {
+    //             if (status == "") {
+    //                 console.log("status", status);
+    //                 dis(getAllOrders());
+    //                 dis(fetchLimits());
+    //                 setLoading(false);
+    //             }
+    //         }
+    //         , [status, dis]
+    //     )
 
-//     /**
-//  * פתיחת חלונית פרטים
-//  */
-//     // useEffect(() => {       
-//     //    dis(fetchLimits());
-//     // }, [])
-useEffect(() => {
-    const load = async () => {
-        await dis(getAllDoors());
-        await dis(fetchLimits());
-        await dis(getAllOrders());
-        await dis(getAllFrames());
-    };
+    //     /**
+    //  * פתיחת חלונית פרטים
+    //  */
+    //     // useEffect(() => {       
+    //     //    dis(fetchLimits());
+    //     // }, [])
+    useEffect(() => {
+        const load = async () => {
+            await dis(getAllDoors());
+            await dis(fetchLimits());
+            await dis(getAllOrders());
+            await dis(getAllFrames());
+        };
 
-    load();
-}, []);
+        load();
+    }, []);
 
-useEffect(() => {
-    if (
-        statusO === "succeeded" &&
-        statusD === "succeeded" &&
-        statusL === "succeeded" &&
-        statusF === "succeeded"
-    ) {
-        setLoading(false);
-    }
-}, [statusO, statusD, statusL,statusF]);
+    useEffect(() => {
+        if (
+            statusO === "succeeded" &&
+            statusD === "succeeded" &&
+            statusL === "succeeded" &&
+            statusF === "succeeded"
+        ) {
+            setLoading(false);
+        }
+    }, [statusO, statusD, statusL, statusF]);
     const openDetails = (order) => {
         setSelectedOrder(order);
         setIsDetailsOpen(true);
@@ -95,9 +95,9 @@ useEffect(() => {
         // יצירת קובץ Excel להורדה
         XLSX.writeFile(wb, "orders.xlsx");
     };
-     if (loading) {
-    return <div className="loading">מתחיל טעינה...</div>;
-  }
+    if (loading) {
+        return <div className="loading">מתחיל טעינה...</div>;
+    }
     return (<div>
         {/* <header className="header">
             <div className="logo-area">
@@ -161,7 +161,9 @@ useEffect(() => {
                                 <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(order)}>פרטים</button>
                                     <button className="action-btn" onClick={() => openEdit(order)}>עריכה</button> </div> </td></tr>))} </tbody> </table> </div> </main>
         {active === "הזמנה חדשה" ? (
+            <Modal isOpen={true} onClose={() => setActive("הזמנות")}>
             <AddOrder />
+            </Modal>
         ) : (
             <div>
                 {/* הצגת רשימת הזמנות */}

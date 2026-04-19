@@ -1,12 +1,12 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { addDoor, getDoors } from "../../Api/DoorsApi";
+import { addDoor, deleteDoorById, getDoors, } from "../../Api/DoorsApi";
 import axios from "axios";
 
 // יצירת פעולה אסינכרונית להוספת הזמנה
 export const createDoor = createAsyncThunk("doors/addDoor", addDoor);
 export const getAllDoors = createAsyncThunk("doors/getDoors", getDoors);
-
+export const deleteDoor = createAsyncThunk("doors/deleteDoor", deleteDoorById);
 
 
 // מצב התחלתי של הסטייט
@@ -54,6 +54,19 @@ const doorsSlice = createSlice({
             })
             // כאשר הבקשה נכשלה
             .addCase(getAllDoors.rejected, (state, action) => {
+                state.status = "failed"; // עדכון הסטטוס ל-"failed"
+                state.error = action.error.message; // שמירת השגיאה במצב
+            })
+            .addCase(deleteDoor.pending, (state) => {
+                state.status = "loading"; // עדכון הסטטוס ל-"loading"
+            })
+            // כאשר הבקשה הושלמה בהצלחה
+            .addCase(deleteDoor.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.doors = state.doors.filter(d => d.id !== action.payload.id);
+            })
+            // כאשר הבקשה נכשלה
+            .addCase(deleteDoor.rejected, (state, action) => {
                 state.status = "failed"; // עדכון הסטטוס ל-"failed"
                 state.error = action.error.message; // שמירת השגיאה במצב
             })
