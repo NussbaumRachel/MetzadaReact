@@ -359,7 +359,10 @@ console.log("updated",updated);
     setOrderDetails(updated);
     updateItem(index, updated);
   };
+const function1 = () => {
+console.log("orders");
 
+}
   return (
     <div className="order-item">
       <div className="form-group">
