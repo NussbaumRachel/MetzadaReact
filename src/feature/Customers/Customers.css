@@ -1,0 +1,11 @@
+.page-content {
+  background: #E3E2DF;
+  color: #000;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #9A1750;
+  margin-top: 16px;
+}
+.page-content h2 {
+  color: #9A1750;
+}

@@ -1,0 +1,165 @@
+.login-scene {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #1b1b1b, #000);
+  overflow: hidden;
+  position: relative;
+}
+
+.doors-wrapper {
+  position: relative;
+  width: 80%;
+  max-width: 900px;
+  height: 90%;
+  perspective: 1400px;
+}
+
+/* דלתות עץ יוקרתיות */
+.door {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(145deg, #3b2e2a, #1c0f0b);
+  border: 5px solid #d4af37; /* מסגרת זהב עבה */
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9), 0 20px 60px rgba(0, 0, 0, 0.8);
+  transition: transform 1.6s cubic-bezier(.77,0,.18,1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.door.left {
+  left: 0;
+  transform-origin: left;
+}
+
+.door.right {
+  right: 0;
+  transform-origin: right;
+}
+
+.doors-wrapper.open .door.left {
+  transform: rotateY(-100deg);
+}
+
+.doors-wrapper.open .door.right {
+  transform: rotateY(100deg);
+}
+
+.door-inner {
+  text-align: center;
+  color: #d4af37;
+}
+
+/* לוגו */
+.logo-slot {
+  width: 100px;
+  height: 100px;
+  border: 3px dashed #d4af37;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  font-size: 14px;
+}
+
+/* טופס המפתח */
+.key-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.key {
+  width: 280px;
+  padding: 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #d4af37, #c99b2b);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.key input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.key button {
+  background: #000;
+  color: #d4af37;
+  border: none;
+  padding: 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* שלט יוקרה */
+.welcome-sign-wrapper {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  animation: dropSign 1s ease forwards;
+  z-index: 10;
+}
+
+.welcome-sign {
+  background: #3b2e2a;
+  color: #d4af37;
+  padding: 15px 40px;
+  border-radius: 12px;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  position: relative;
+}
+
+.welcome-sign::before, .welcome-sign::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 50px;
+  background: #d4af37;
+  top: -50px;
+}
+
+.welcome-sign::before { left: 20%; }
+.welcome-sign::after { right: 20%; }
+
+@keyframes dropSign {
+  0% { transform: translateY(-100px); opacity: 0; }
+  100% { transform: translateY(40px); opacity: 1; }
+}
+
+/* דף הבית */
+.home-page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top, #222, #000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4af37;
+  font-size: 36px;
+  animation: homeEnter 1.5s ease forwards;
+}
+
+@keyframes homeEnter {
+  0% { transform: translateZ(-500px) scale(0.5); opacity: 0; }
+  100% { transform: translateZ(0) scale(1); opacity: 1; }
+}

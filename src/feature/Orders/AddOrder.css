@@ -1,0 +1,152 @@
+/* .add-order-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.add-order-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-actions {
+  text-align: center;
+}
+
+.btn-primary {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #45a049;
+} */
+
+
+
+/* עיצוב כללי */
+/* עיצוב כללי */
+.add-order-container {
+  width: 80%;
+  max-width: 700px; /* הגבלת רוחב */
+  margin: 0 auto;
+  padding: 30px;
+  font-family: 'Arial', sans-serif;
+  background-color: #1a1a1a; /* רקע כהה */
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: white; /* טקסט לבן */
+}
+
+h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #d8c06a; /* זהב */
+  font-weight: bold;
+}
+
+h3 {
+  margin-top: 20px;
+  font-size: 24px;
+  color: #d8c06a;
+}
+
+.loading {
+  text-align: center;
+  font-size: 20px;
+  color: #d8c06a; /* זהב */
+}
+
+/* טופס */
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 18px;
+  color: #d8c06a; /* זהב */
+  margin-bottom: 5px;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #d8c06a; /* זהב */
+  border-radius: 8px;
+  margin-top: 5px;
+  background-color: #333333; /* רקע כהה לשדות */
+  color: white; /* טקסט לבן */
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: #d8c06a; /* זהב */
+  outline: none;
+  box-shadow: 0 0 8px rgba(248, 211, 43, 0.7); /* הוספת הילה זהובה */
+}
+
+.form-actions {
+  text-align: center;
+}
+
+.btn-submit {
+  background-color: #d8c06a; /* זהב */
+  color: black;
+  border: none;
+  padding: 15px 25px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background-color: #d4b316; /* זהב כהה */
+}
+
+select, input[type="text"], input[type="date"] {
+  font-size: 16px;
+}
+
+/* מותאם עבור שולחנות וטלפונים */
+@media (max-width: 768px) {
+  .add-order-container {
+    width: 90%;
+  }
+}
