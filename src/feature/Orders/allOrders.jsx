@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllDoors } from "../Doors/DoorsSlice";
 import { getAllOrders } from "../Orders/OrdersSlice"
 import { getAllFrames } from "../Frames/FramesSlice";
-import { fetchLimits } from "../PossibleValues/PossibleValuesSlice";
+import { checkAllLimits } from "../PossibleValues/PossibleValuesSlice";
 
 function AllOrders() {
     const orders = useSelector(state => state.orders.orders)
@@ -56,7 +56,7 @@ function AllOrders() {
     useEffect(() => {
         const load = async () => {
             await dis(getAllDoors());
-            await dis(fetchLimits());
+            await dis(checkAllLimits());
             await dis(getAllOrders());
             await dis(getAllFrames());
         };
@@ -191,6 +191,7 @@ function AllOrders() {
                         {selectedOrder.orderItems?.map((item, i) => (
                             <div key={i} className="item-card">
                                 <div>סוג: {item.itemType}</div>
+                                <div>Id: {item.itemId}</div>
                                 <div>כמות: {item.quantity}</div>
 
                                 {item.itemType === "1" && (

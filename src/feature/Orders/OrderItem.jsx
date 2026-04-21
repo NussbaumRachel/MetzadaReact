@@ -309,7 +309,9 @@ const OrderItem = ({ index, item, updateItem }) => {
   });
 
   // פונקציה להחזרת אפשרויות מתוך store
-  const getOptions = (field) => possibleValues.find(v => v.field === field)?.limits || [];
+  const getOptions = (field) =>{console.log("possibleValues",possibleValues);
+
+   return possibleValues.find(v => v.key === field)?.values || []};
 
   // useEffect לאתחול פריט מה-props
   useEffect(() => {
@@ -325,7 +327,7 @@ const OrderItem = ({ index, item, updateItem }) => {
     if (doors.length > 0 && item.itemId != 0 && item.itemType === 1) {
       const door = doors.find(d => d.id === item.itemId);
       if (door) {
-        updated = { ...updated, doorDetails: door, quantity: item.quantity, itemType: "1" };
+        updated = { ...updated, doorDetails: door, frameDetails: orderDetails.frameDetails, quantity: item.quantity, itemType: "1" };
         updateItem(index, updated);
       }
     }
@@ -333,7 +335,7 @@ const OrderItem = ({ index, item, updateItem }) => {
     if (doors.length > 0 && item.itemId != 0 && item.itemType === 2) {
       const frame = frames.find(d => d.id === item.itemId);
       if (frame) {
-        updated = { ...updated, frameDetails: frame, itemType: "2", quantity: item.quantity };
+        updated = { ...updated, frameDetails: frame, doorDetails: orderDetails.doorDetails, itemType: "2", quantity: item.quantity };
         updateItem(index, updated);
       }
     }
@@ -401,7 +403,7 @@ const OrderItem = ({ index, item, updateItem }) => {
                     className="form-input"
                   >
                     {options.map(opt => (
-                      <option key={opt.Id} value={opt.value}>
+                      <option  value={opt.value}>
                         {opt.value}
                       </option>
                     ))}
