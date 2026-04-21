@@ -7,7 +7,7 @@ import Modal from '../Modals/Modal';
 const ManagePossibleValuesButton = () => {
   const dispatch = useDispatch();
   const possibleValues = useSelector((state) => state.possibleValues.possibleValues);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedField, setSelectedField] = useState('');
   const [newValue, setNewValue] = useState('');
 
@@ -33,9 +33,9 @@ dispatch(DeleteOneLimit(value))  };
   // }, [dispatch]);
   return (
     <div>
-      <button onClick={() => setIsModalOpen(true)}>ניהול ערכים מוגבלים</button>
-      {isModalOpen && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      {/* <button onClick={() => setIsModalOpen(true)}>ניהול ערכים מוגבלים</button>
+      {isModalOpen && ( */}
+        {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}> */}
           <div className="modal-header">
             <h2>ניהול ערכים מוגבלים</h2>
           </div>
@@ -71,8 +71,9 @@ dispatch(DeleteOneLimit(value))  };
               </div>
             )}
           </div>
-        </Modal>
-      )}
+        {/* </Modal> */}
+      {/* ) */}
+      {/* } */}
     </div>
   );
 };

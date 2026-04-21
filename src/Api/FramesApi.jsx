@@ -32,3 +32,10 @@ export const addFrame = async (newFrame) => {
     //   throw new Error(error.response ? error.response.data : "Error adding order");
     // }
   }
+  export const deleteFrameById = async (id) => {
+
+       return fetchWithRetry(() =>
+         axios.delete(`https://localhost:7253/api/DoorFrame/Delete?id=${id}`)
+           .then(res => res.data)
+   );   
+  }

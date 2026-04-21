@@ -1,11 +1,12 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { addFrame, getFrames } from "../../Api/FramesApi";
+import { addFrame, getFrames, deleteFrameById } from "../../Api/FramesApi";
 import axios from "axios";
 
 // יצירת פעולה אסינכרונית להוספת הזמנה
 export const createFrame = createAsyncThunk("frames/addFrame", addFrame);
 export const getAllFrames = createAsyncThunk("frames/getFrames", getFrames);
+export const deleteFrame = createAsyncThunk("frames/deleteFrame", deleteFrameById);
 
 
 // מצב התחלתי של הסטייט
@@ -51,6 +52,19 @@ const framesSlice = createSlice({
             })
             // כאשר הבקשה נכשלה
             .addCase(getAllFrames.rejected, (state, action) => {
+                state.status = "failed"; // עדכון הסטטוס ל-"failed"
+                state.error = action.error.message; // שמירת השגיאה במצב
+            })
+            .addCase(deleteFrame.pending, (state) => {
+                state.status = "loading"; // עדכון הסטטוס ל-"loading"
+            })
+            // כאשר הבקשה הושלמה בהצלחה
+            .addCase(deleteFrame.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                // state.doors = state.frames.filter(d => d.id !== action.payload.id);
+            })
+            // כאשר הבקשה נכשלה
+            .addCase(deleteFrame.rejected, (state, action) => {
                 state.status = "failed"; // עדכון הסטטוס ל-"failed"
                 state.error = action.error.message; // שמירת השגיאה במצב
             })

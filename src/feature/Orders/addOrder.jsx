@@ -131,6 +131,7 @@ console.log("items",items);
               index={index}
               item={item}
               updateItem={updateItem}
+              isOrder={true}
             />
           ))}
 

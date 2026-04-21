@@ -63,7 +63,7 @@ const doorsSlice = createSlice({
             // כאשר הבקשה הושלמה בהצלחה
             .addCase(deleteDoor.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.doors = state.doors.filter(d => d.id !== action.payload.id);
+                // state.doors = state.doors.filter(d => d.id !== action.payload.id);
             })
             // כאשר הבקשה נכשלה
             .addCase(deleteDoor.rejected, (state, action) => {
