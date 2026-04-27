@@ -16,7 +16,8 @@ export default function AllDoors() {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isManagePossibleValuesOpen, setIsManagePossibleValuesOpen] = useState(false);
-
+        const [isAddOpen, setIsAddOpen] = useState(false);
+    
     const openDetails = (door) => {
         setSelectedDoor(door);
         setIsDetailsOpen(true);
@@ -41,6 +42,8 @@ export default function AllDoors() {
             <button onClick={() => { setIsManagePossibleValuesOpen(true) }} className="btn-primary">
                 ניהול ערכים מוגבלים
             </button>
+            <button onClick={() => { setIsAddOpen(true) }} className="btn-primary">
+הוספת דלת חדשה      </button>
             <div className="orders-table-wrapper">
                 <table className="orders-table">
                     <thead>
@@ -125,6 +128,14 @@ export default function AllDoors() {
                     <button className="btn-danger" onClick={handleDelete}>מחק</button>
                 </div>
             </Modal>
+            <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}>
+                    <h2>עריכת משקוף</h2>
+                    <OrderItem
+                      item={{ itemType: "1" }}
+                      isOrder={false} 
+                      isNew={true}
+                      />
+                  </Modal>
             {/* <Modal isEditOpen={isEditOpen} onClose={() => setIsEditOpen(false)}>
             <div className="modal-header">
                 <h2>עריכת הזמנה</h2>

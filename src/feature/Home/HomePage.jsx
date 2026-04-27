@@ -1,32 +1,126 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { useState, useContext } from "react"
-import './HomePage.css';
-import axios from 'axios'
-function HomePage() {
-    const [active, setActive] = useState("הזמנות");
-    const menuItems = ["הזמנות", "דלתות", "משקופים", "לקוחות"];
+import "./HomePage.css";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
+export default function HomePage() {
+  const [scrollY, setScrollY] = useState(0);
 
-    return (<div>
-         <main className="hero">
-            <div className="hero-inner">
-                <div className="hero-tag"> <span className="hero-tag-dot" />
-                    <span>מערכת ניהול חכמה לפס ייצור הדלתות</span> </div> <h1 className="hero-title">
-                    <span>ברוכים הבאים ל</span>{" "} <span className="hero-highlight">מצדה</span> </h1>
-                <p className="hero-subtitle"> פלטפורמת ניהול יוקרתית למפעל דלתות – מעקב מדויק אחרי{" "}
-                    <strong>הזמנות, דלתות, משקופים ולקוחות</strong> בממשק שחור־זהב אלגנטי, המותאם לעבודה שוטפת של מנהלי הייצור והמשרד. </p>
-                <div className="hero-actions"> <button className="btn-primary"> יצירת הזמנה חדשה </button> <button className="btn-secondary"> צפייה בכל ההזמנות </button> </div>
-                <div className="section-box">
-                    <h2 className="section-title">מה מחכה לך במערכת מצדה?</h2>
-                    <p className="section-text"> בתפריט העליון תוכל לעבור בין מסכי הניהול המרכזיים של המפעל: הזמנות פעילות, קטלוג הדלתות, משקופים ופרטי הלקוחות. כאן בדף הבית תוכל להציג סטטוס ייצור, התראות חשובות ופעולות מהירות – ובהמשך תוכל להרחיב כל מסך בריאקט לפי צרכי המפעל. </p>
-                </div>
-            </div>
-            <img src={"/pics/d2.png"} />
-            {/* <section className="production-timeline"> <h2>מסלול הייצור במצדה</h2> <p className="timeline-subtitle"> מהזמנה ועד אספקה – כל שלב בפס הייצור של הדלתות שלך. </p> <div className="timeline-track"> {["תכנון", "חיתוך", "צביעה", "הרכבה", "בדיקת איכות", "אספקה"].map((step, index) => (<div key={step} className="timeline-step"> <div className="timeline-dot" /> <div className="timeline-label">{step}</div> </div>))} <div className="timeline-glow" /> </div> </section> */}
-        </main>
-    </div>);
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div className="home-pro">
+
+      {/* HERO */}
+      <section className="hero-pro">
+        <motion.div
+          className="hero-bg"
+          style={{ transform: `translateY(${scrollY * 0.3}px)` }}
+        />
+
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          🚪 דלתות מצדה
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          חוויית דלתות יוקרה בעיצוב חדשני
+        </motion.p>
+
+        <motion.div
+          className="cta-buttons"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.8 }}
+        >
+          <button className="gold">התחל פרויקט</button>
+          <button className="dark">צפה בקטלוג</button>
+        </motion.div>
+      </section>
+
+      {/* STATS */}
+      <section className="stats-pro">
+        {[
+          ["🔥", "12,000+ דלתות"],
+          ["🏭", "25 שנות ניסיון"],
+          ["⭐", "לקוחות מרוצים"]
+        ].map((s, i) => (
+          <motion.div
+            key={i}
+            className="stat-pro"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span>{s[0]}</span>
+            <b>{s[1]}</b>
+          </motion.div>
+        ))}
+      </section>
+
+      {/* PARALLAX SHOWCASE */}
+      <section className="showcase">
+        <motion.div
+          className="door-card"
+          whileHover={{ rotateY: 10, scale: 1.05 }}
+        >
+          🚪 דלת מודרנית שחורה
+        </motion.div>
+
+        <motion.div
+          className="door-card gold"
+          whileHover={{ rotateY: -10, scale: 1.05 }}
+        >
+          ✨ דלת יוקרה זהב
+        </motion.div>
+      </section>
+
+      {/* FEATURES */}
+      <section className="features-pro">
+        {["עיצוב אישי", "בטיחות גבוהה", "ייצור מהיר", "חומרים פרימיום"].map((f, i) => (
+          <motion.div
+            key={i}
+            className="feature-card"
+            whileHover={{ y: -10, scale: 1.02 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+          >
+            {f}
+          </motion.div>
+        ))}
+      </section>
+
+      {/* GALLERY 3D */}
+      <section className="gallery-pro">
+        {[1, 2, 3, 4].map(i => (
+          <motion.div
+            key={i}
+            className="img-pro"
+            whileHover={{ rotateX: 10, rotateY: 10, scale: 1.05 }}
+          />
+        ))}
+      </section>
+
+      {/* FINAL CTA */}
+      <motion.section
+        className="cta-pro"
+        whileInView={{ scale: 1 }}
+        initial={{ scale: 0.9 }}
+      >
+        <h2>רוצה דלת ברמה אחרת?</h2>
+        <button>📞 דבר איתנו עכשיו</button>
+      </motion.section>
+
+    </div>
+  );
 }
-
-
-
-export default HomePage;
