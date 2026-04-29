@@ -24,10 +24,10 @@ const defaultName = location.state?.name || "";
 const addCustomer = (form) => {
  const newCustomer = {
    ...form,
+   id: form.id ? form.id : (Date.now() % 1000000000).toString(), // יצירת ID ייחודי אם אין ID קיים, מבצע מודולו כדי לקבל מספר באורך 9 תווים
    notes: form.notes || "",
-   isActive: true
  };
- !form.id ? dispatch(createCustomer(form)) : dispatch(updateCustomer(form));
+ !form.id ? dispatch(createCustomer(newCustomer)) : dispatch(updateCustomer(newCustomer));
 
   // onSave(false);
 };
@@ -50,7 +50,7 @@ const addCustomer = (form) => {
       <input name="address" value={form.address} onChange={handleChange} placeholder="כתובת"/>
       <input name="contactPersonName" value={form.contactPersonName} onChange={handleChange} placeholder="שם איש קשר"/>
       <input name="contactPersonPhone" value={form.contactPersonPhone} onChange={handleChange} placeholder="טלפון איש קשר"/>
-      <input name="cn" value={form.cn} onChange={handleChange} placeholder="מספר זיהוי"/>
+      <input name="cn" value={form.cn} onChange={handleChange} placeholder="מספר זיהוי" required/>
       {/* <input name="notes" value={form.notes} onChange={handleChange} placeholder="הערות"/> */}
 
       <button onClick={()=>addCustomer(form)}>שמור</button>
