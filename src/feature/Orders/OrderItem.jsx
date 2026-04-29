@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addOrder } from "../../Api/OrdersApi";
 import { createDoor } from "../Doors/DoorsSlice";
 import { createFrame } from "../Frames/FramesSlice";
-
 const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
   const doors = useSelector(state => state.doors.doors);
   const frames = useSelector(state => state.frames.frames);
@@ -34,7 +33,6 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
       internalLayoutLength: 0,
       externalLayoutWidth: 0,
       externalLayoutLength: 0,
-      notes: "",
     },
     frameDetails: {
       side: "",
@@ -49,11 +47,11 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
       profile: "",
       perforation: "",
       color: "",
-      notes: "",
     },
     quantity: 1
   });
-
+  const doorsFields = useSelector(state => state.doors.doorsFields);
+  const framesFields = useSelector(state => state.frames.framesFields);
   // פונקציה להחזרת אפשרויות מתוך store
   const getOptions = (field) => {
     return possibleValues.find(v => v.key === field)?.values || []
@@ -75,7 +73,7 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
       }
     }
     // מוודאים שפרטי משקוף קיימים אם הפריט הוא משקוף
-    if (doors.length > 0 && item.itemId != 0 && item.itemType === 2) {
+    if (frames.length > 0 && item.itemId != 0 && item.itemType === 2) {
       const frame = frames.find(d => d.id === item.itemId);
       if (frame) {
         updated = { ...updated, frameDetails: frame, doorDetails: orderDetails.doorDetails, itemType: "2" };
@@ -155,18 +153,19 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
       {orderDetails.itemType === "1" && (
         <div className="form-section">
           <h3>פרטי דלת</h3>
-          {Object.keys(orderDetails.doorDetails).map(field => {
+          {doorsFields.map(field => {
             const options = getOptions(field);
             return (
-              <div key={field} className="form-group">
-                <label>{field}</label>
+              <div key={field.field} className="form-group">
+                <label>{field.hebrow}</label>
                 {options.length > 0 ? (
                   <select
-                    name={`doorDetails.${field}`}
-                    value={orderDetails.doorDetails[field]}
+                    name={`doorDetails.${field.field}`}
+                    value={orderDetails.doorDetails[field.field]}
                     onChange={handleInputChange}
                     className="form-input"
                   >
+                    <option value="">בחר אפשרות</option>
                     {options.map(opt => (
                       <option value={opt.value}>
                         {opt.value}
@@ -175,9 +174,9 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
                   </select>
                 ) : (
                   <input
-                    type="text"
-                    name={`doorDetails.${field}`}
-                    value={orderDetails.doorDetails[field]}
+                    type={field.type}
+                    name={`doorDetails.${field.key}`}
+                    value={orderDetails.doorDetails[field.key] || ""}
                     onChange={handleInputChange}
                     className="form-input"
                   />
@@ -192,18 +191,19 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
       {orderDetails.itemType === "2" && (
         <div className="form-section">
           <h3>פרטי משקוף</h3>
-          {Object.keys(orderDetails.frameDetails).map(field => {
+          {framesFields.map(field => {
             const options = getOptions(field);
             return (
-              <div key={field} className="form-group">
-                <label>{field}</label>
+              <div key={field.field} className="form-group">
+                <label>{field.hebrow}</label>
                 {options.length > 0 ? (
                   <select
-                    name={`frameDetails.${field}`}
-                    value={orderDetails.frameDetails[field]}
+                    name={`frameDetails.${field.field}`}
+                    value={orderDetails.frameDetails[field.field]}
                     onChange={handleInputChange}
                     className="form-input"
                   >
+                    <option value="">בחר אפשרות</option>
                     {options.map(opt => (
                       <option key={opt.Id} value={opt.value}>
                         {opt.value}
@@ -212,9 +212,9 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
                   </select>
                 ) : (
                   <input
-                    type="text"
-                    name={`frameDetails.${field}`}
-                    value={orderDetails.frameDetails[field]}
+                    type={field.type}
+                    name={`frameDetails.${field.field}`}
+                    value={orderDetails.frameDetails[field.field] || ""}
                     onChange={handleInputChange}
                     className="form-input"
                   />
@@ -234,7 +234,7 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
             onChange={handleDoorFrameChange}
           />
         </div>)}
-        {isNew && <button onClick={() => {orderDetails.itemType == "1" ?addItem(orderDetails.doorDetails) :addItem(orderDetails.frameDetails) }}>הוסף פריט להזמנה</button>}
+        {isNew && <button onClick={() => {orderDetails.itemType == "1" ?addItem(orderDetails.doorDetails) :addItem(orderDetails.frameDetails) }}>הוסף פריט</button>}
     </div>
   );
 };

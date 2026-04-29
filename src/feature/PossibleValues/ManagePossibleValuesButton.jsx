@@ -4,13 +4,16 @@ import { CreateLimit, DeleteOneLimit, fetchLimits } from './PossibleValuesSlice'
 import Modal from '../Modals/Modal';
 
 
-const ManagePossibleValuesButton = () => {
+const ManagePossibleValuesButton = ({type}) => {
   const dispatch = useDispatch();
   const possibleValues = useSelector((state) => state.possibleValues.possibleValues);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedField, setSelectedField] = useState('');
   const [newValue, setNewValue] = useState('');
 
+    const [fields, setFields] = useState([]); // הגדרת שדות מקומית
+  const doorsFields = useSelector((state) => state.doors.doorsFields);
+  const framesFields = useSelector((state) => state.frames.framesFields);
   const openModal = (field) => {
     setSelectedField(field);
     setIsModalOpen(true);
@@ -24,7 +27,13 @@ const ManagePossibleValuesButton = () => {
     setNewValue('');
     setIsModalOpen(false);
   };
-
+ useEffect(() => {
+        if (type === '1') {
+            setFields(doorsFields); // מגדיר את השדות לדלתות
+        } else if (type === '2') {
+            setFields(framesFields); // מגדיר את השדות למסגרות
+        }
+    }, [type, doorsFields, framesFields]);
   const handleDeleteValue = (value) => {
     console.log(`Deleting value: ${value}`);
 dispatch(DeleteOneLimit(value))  };
@@ -42,9 +51,9 @@ dispatch(DeleteOneLimit(value))  };
           <div className="modal-body">
             <h3>בחר שדה לעריכה</h3>
             <ul>
-              {possibleValues.map((fieldData) => (
-                <li key={fieldData.key}>
-                  <button onClick={() => openModal(fieldData.key)}>{fieldData.key}</button>
+              {fields.map((fieldData) => (
+                <li key={fieldData.key} >
+                  <button onClick={() => openModal(fieldData.key)}>{fieldData.hebrow}</button>
                 </li>
               ))}
             </ul>

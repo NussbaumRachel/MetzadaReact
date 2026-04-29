@@ -14,8 +14,30 @@ const initialState = {
     doors: [],    // מערך ההזמנות
     status: "", // מצב ברירת מחדל (הפעולה לא בוצעה עדיין)
     error: null,   // שגיאות אפשריות
-};
+    doorsFields: [{field:"side",hebrow:"צד",type:"text"},
+    {field:"width",hebrow:"רוחב",type:"number"},
+    {field:"height",hebrow:"גובה",type:"number"},
+    {field:"hinges",hebrow:"מספר צירים",type:"number"},
+    {field:"perforationTypeForShoeing",hebrow:"סוג ניקוב לפירזול",type:"text"},
+    {field:"skylight",hebrow:"צוהר",type:"text"},
+    {field:"perforation",hebrow:"ניקוב",type:"text"},
+    {field:"shoeingA",hebrow:"פירזול A",type:"text"},
+    {field:"shoeingB",hebrow:"פירזול B",type:"text"},
+    {field:"shoeingC",hebrow:"פירזול C",type:"text"},
+    {field:"finishing",hebrow:"גימור",type:"text"}
+    ,{field:"type",hebrow:"סוג דלת",type:"text"},
+    {field:"opening",hebrow:"פתיחה",type:"text"},
+    {field:"color",hebrow:"צבע",type:"text"},
+    {field:"leaf",hebrow:"עלים",type:"text"},
+    {field:"internalLayoutWidth",hebrow:"רוחב פרופיל פנימי",type:"number"},
+    {field:"internalLayoutLength",hebrow:"גובה פרופיל פנימי",type:"number"},
+    {field:"externalLayoutWidth",hebrow:"רוחב פרופיל חיצוני",type:"number"},
+    {field:"externalLayoutLength",hebrow:"גובה פרופיל חיצוני",type:"number"},
+]}
 
+     
+    
+      
 // יצירת הסלייס לניהול הזמנות
 const doorsSlice = createSlice({
     name: "doors", // שם הסלייס

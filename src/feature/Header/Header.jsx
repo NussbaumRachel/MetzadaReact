@@ -41,6 +41,7 @@ export default function Header() {
     { path: "/doors", label: "דלתות" },
     { path: "/frames", label: "משקופים" },
     { path: "/customers", label: "לקוחות" },
+    { path: "/manager", label: "ניהול עובדים" }
   ];
 
   return (

@@ -68,7 +68,7 @@ export default function AllFrames() {
         </table>
       </div>
       {isManagePossibleValuesOpen && (<Modal isOpen={isManagePossibleValuesOpen} onClose={() => setIsManagePossibleValuesOpen(false)}>
-        <ManagePossibleValuesButton /></Modal>)}
+        <ManagePossibleValuesButton type={"2"}/></Modal>)}
       <Modal isOpen={isDetailsOpen} onClose={() => setIsDetailsOpen(false)}>
         <div className="modal-header">
           <h2>פרטי הזמנה</h2>

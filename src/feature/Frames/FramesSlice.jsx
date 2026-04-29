@@ -14,6 +14,18 @@ const initialState = {
     frames: [],    // מערך ההזמנות
     status: "", // מצב ברירת מחדל (הפעולה לא בוצעה עדיין)
     error: null,   // שגיאות אפשריות
+    framesFields: [{field:"side",hebrow:"צד",type:"text"},
+        {field:"desc",hebrow:"תיאור",type:"text"},
+        {field:"width",hebrow:"רוחב",type:"number"},
+        {field:"height",hebrow:"גובה",type:"number"},
+        {field:"hinges",hebrow:"מספר צירים",type:"number"},
+        {field:"wallFrameThickness",hebrow:"עובי משקוף לקיר",type:"number"},
+        {field:"perforationTypeForShoeing",hebrow:"סוג ניקוב לפירזול",type:"text"},
+        {field:"opening",hebrow:"פתיחה",type:"text"},
+        {field:"framesHeightWithShutter",hebrow:"גובה משקוף עם תריס",type:"number"},
+        {field:"profile",hebrow:"פרופיל",type:"text"},
+        {field:"perforation",hebrow:"ניקוב",type:"text"},
+        {field:"color",hebrow:"צבע",type:"text"}]
 };
 
 // יצירת הסלייס לניהול הזמנות

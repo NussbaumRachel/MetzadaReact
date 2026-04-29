@@ -71,7 +71,7 @@ export default function AllDoors() {
                 </table>
             </div>
             {isManagePossibleValuesOpen && (<Modal isOpen={isManagePossibleValuesOpen} onClose={() => setIsManagePossibleValuesOpen(false)}>
-                <ManagePossibleValuesButton /></Modal>)}
+                <ManagePossibleValuesButton type={"1"}/></Modal>)}
 
             <Modal isOpen={isDetailsOpen} onClose={() => setIsDetailsOpen(false)}>
                 <div className="modal-header">
