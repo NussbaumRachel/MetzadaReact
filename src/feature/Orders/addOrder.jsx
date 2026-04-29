@@ -4,19 +4,97 @@ import { addNewOrderAsync } from "./OrdersSlice";
 import { fetchLimits } from "../PossibleValues/PossibleValuesSlice";
 import OrderItem from "./OrderItem";
 import './AddOrder.css';
+import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+
 
 const AddOrder = ({ existingOrder }) => {
+ const navigate = useNavigate();
   
+const goToAddCustomer = () => {
+  navigate("/add-customer", {
+    state: { name: search }
+  });
+};
+
+
+
+// export const orderSchema = z.object({
+//   custName: z.string().min(1, "חובה להזין שם לקוח"),
+//   deliveryDate: z.string().min(1, "חובה לבחור תאריך"),
+
+//   street: z.string().min(1),
+//   plot: z.string().optional(),
+//   buildingNum: z.string().optional(),
+//   floor: z.string().optional(),
+//   apartmentNum: z.string().optional(),
+
+//   price: z.number().min(0, "מחיר לא תקין").optional(),
+//   notes: z.string().optional()
+// });
+
+
+
+
+
+
+
+
+
+const custs = useSelector(state => state.customers.customers) || []
+const [search, setSearch] = useState("");
+const [filteredCustomers, setFilteredCustomers] = useState(custs);
+const [showDropdown, setShowDropdown] = useState(false);
+
+useEffect(() => {
+  if (!search) {
+    setFilteredCustomers([]);
+    return;
+  }
+
+  const filtered = custs.filter(c =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  setFilteredCustomers(filtered);
+}, [search, custs]);
+
+const selectCustomer = (customer) => {
+  setOrder(prev => ({
+    ...prev,
+    custName: customer.name,
+    custId: customer.id
+  }));
+
+  setSearch(customer.name);
+  setShowDropdown(false);
+};
+
+
+
+
+
+
+
+
+
   const [order, setOrder] = useState({
     custName: "",
     deliveryDate: "",
     orderItems: [],
     existingOrder:null
   });
-
+const addressFields = [
+  { name: "street", label: "רחוב", type: "text" },
+  { name: "plot", label: "חלקה", type: "text" },
+  { name: "buildingNum", label: "בניין", type: "text" },
+  { name: "floor", label: "קומה", type: "text" },
+  { name: "apartmentNum", label: "דירה", type: "text" },
+  { name: "price", label: "מחיר", type: "number" }
+];
   // const [loading, setLoading] = useState(true);
   const dis = useDispatch();
-  const custs = useSelector(state => state.customers.customers) || []
+  
 
  
 
@@ -28,13 +106,21 @@ const AddOrder = ({ existingOrder }) => {
       setOrder({
         custName: existingOrder.custName || "",
         deliveryDate: existingOrder.deliveryDate || "",
-        orderItems:  [],
-        existingOrder:existingOrder
-      });
-      console.log("order",order)
-      extendsOrderItems(existingOrder.orderItems)
-    }
-  }, []);
+        street: existingOrder.street || "",
+        plot: existingOrder.plot || "",
+        buildingNum: existingOrder.buildingNum || "",
+        floor: existingOrder.floor || "",
+        apartmentNum: existingOrder.apartmentNum || "",
+        price: existingOrder.price || "",
+        notes: existingOrder.notes || "",
+      orderItems: [],
+      existingOrder: existingOrder
+    });
+
+    extendsOrderItems(existingOrder.orderItems);
+  }
+}, []);
+     
   const extendsOrderItems = (ois) =>{
     console.log(ois);
     let newOis = []
@@ -80,6 +166,7 @@ console.log("items",items);
     e.preventDefault();
     const finalOrder = {
       ...order,
+      orderDate: new Date().toISOString().split('T')[0], // תאריך הזמנה הוא היום
       orderItems: order.orderItems,
       custId:custs.find(c => c.name == order.custName)?.id
     };
@@ -96,19 +183,41 @@ console.log("items",items);
 
       <form  className="order-form">
 
-        <div className="form-group">
-          <label htmlFor="custName">שם הלקוח</label>
-          <input
-            type="text"
-            id="custName"
-            name="custName"
-            value={order.custName}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-        </div>
+       <div className="form-group autocomplete">
+  <label>שם לקוח</label>
 
+  <div className="input-with-btn">
+    <input
+      type="text"
+      value={search}
+      onChange={(e) => {
+        setSearch(e.target.value);
+        setShowDropdown(true);
+      }}
+      onFocus={() => setShowDropdown(true)}
+    />
+
+    {search && filteredCustomers.length === 0 && (
+      <button
+        type="button"
+        className="add-btn"
+        onClick={goToAddCustomer}
+      >
+        לא נמצא, הוסף לקוח חדש
+      </button>
+    )}
+  </div>
+
+  {showDropdown && filteredCustomers.length > 0 && (
+    <ul className="dropdown">
+      {filteredCustomers.map(c => (
+        <li key={c.id} onClick={() => selectCustomer(c)}>
+          {c.name}
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
         <div className="form-group">
           <label htmlFor="deliveryDate">תאריך אספקה</label>
           <input
@@ -121,7 +230,24 @@ console.log("items",items);
             className="form-input"
           />
         </div>
+<div className="form-grid">
+  {addressFields.map(f => (
+    <div className="form-group" key={f.name}>
+      <label>{f.label}</label>
+      <input
+        type={f.type}
+        name={f.name}
+        value={order[f.name]}
+        onChange={handleInputChange}
+      />
+    </div>
+  ))}
+</div>
 
+<div className="form-group full">
+  <label>הערות</label>
+  <textarea name="notes" value={order.notes} onChange={handleInputChange} />
+</div>
         <div>
           {order.orderItems.map((item = {}, index) => (
             <OrderItem

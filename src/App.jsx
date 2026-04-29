@@ -46,6 +46,7 @@ import AllDoors from "./feature/Doors/AllDoors";
 import AllFrames from "./feature/Frames/AllFrames";
 import AllCustomers from "./feature/Customers/AllCustomers";
 import LoginDoor from "./feature/Login/LoginDoor";
+import CustomerForm from "./feature/Customers/CustomerForm";
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -63,6 +64,7 @@ export default function App() {
               <Route path="/doors" element={<AllDoors />} />
               <Route path="/frames" element={<AllFrames />} />
               <Route path="/customers" element={<AllCustomers />} />
+              <Route path="/add-customer" element={<CustomerForm />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </>

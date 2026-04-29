@@ -1,13 +1,13 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { addCustomer, getCustomers, deleteCustomerById } from "../../Api/CustomersApi";
+import { addCustomer, getCustomers, deleteCustomerById,putCustomer } from "../../Api/CustomersApi";
 import axios from "axios";
 
 // יצירת פעולה אסינכרונית להוספת הזמנה
 export const createCustomer = createAsyncThunk("customers/addCustomer", addCustomer);
 export const getAllCustomers = createAsyncThunk("customers/getCustomers", getCustomers);
 export const deleteCustomer = createAsyncThunk("customers/deleteCustomer", deleteCustomerById);
-
+export const updateCustomer = createAsyncThunk("customers/updateCustomer", putCustomer);
 
 // מצב התחלתי של הסטייט
 const initialState = {
@@ -65,6 +65,19 @@ const customersSlice = createSlice({
             })
             // כאשר הבקשה נכשלה
             .addCase(deleteCustomer.rejected, (state, action) => {
+                state.status = "failed"; // עדכון הסטטוס ל-"failed"
+                state.error = action.error.message; // שמירת השגיאה במצב
+            })
+            .addCase(updateCustomer.pending, (state) => {
+                state.status = "loading"; // עדכון הסטטוס ל-"loading"
+            })
+            // כאשר הבקשה הושלמה בהצלחה
+            .addCase(updateCustomer.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.customers = state.customers.map(c => c.id === action.payload.id ? action.payload : c);
+            })
+            // כאשר הבקשה נכשלה
+            .addCase(updateCustomer.rejected, (state, action) => {
                 state.status = "failed"; // עדכון הסטטוס ל-"failed"
                 state.error = action.error.message; // שמירת השגיאה במצב
             })

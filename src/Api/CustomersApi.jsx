@@ -37,5 +37,11 @@ export const addCustomer = async (newCustomer) => {
        return fetchWithRetry(() =>
          axios.delete(`https://localhost:7253/api/Customer/Delete?id=${id}`)
            .then(res => res.data)
-   );   
-  }
+   );   }
+   export const putCustomer = async (customer) => {
+
+    return fetchWithRetry(() =>
+      axios.put(`https://localhost:7253/api/Customer/Update`, customer)
+        .then(res => res.data)
+    );
+}

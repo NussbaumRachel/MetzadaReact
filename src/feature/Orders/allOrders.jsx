@@ -10,7 +10,8 @@ import { getAllOrders } from "../Orders/OrdersSlice"
 import { getAllFrames } from "../Frames/FramesSlice";
 import { checkAllLimits } from "../PossibleValues/PossibleValuesSlice";
 import { getAllCustomers } from "../Customers/CustomerSlice"
-function AllOrders() {
+function AllOrders() {   
+    const customers = useSelector(state => state.customers.customers)
     const orders = useSelector(state => state.orders.orders)
     const statusO = useSelector(state => state.orders.status)
     const statusD = useSelector(state => state.doors.status)
@@ -87,6 +88,11 @@ function AllOrders() {
         setSelectedOrder(order);
         setIsEditOpen(true);
     };
+    const getContactName = (custId) => {
+ 
+        const customer = customers.find(c => c.id === custId);
+        return customer ? customer.contactPersonName : "לא נמצא";
+    }
     const exportToExcel = () => {
         // יצירת WorkBook
         const ws = XLSX.utils.json_to_sheet(orders); // המרת נתונים מהמערך ל-sheet
@@ -144,6 +150,7 @@ function AllOrders() {
                         <tr>
                             <th>מס' הזמנה</th>
                             <th>לקוח</th>
+                            <th>תאריך הזמנה</th>
                             <th>תאריך אספקה</th>
                             <th>סטטוס</th>
                             <th>איש קשר</th>
@@ -156,9 +163,10 @@ function AllOrders() {
                             <tr key={order.id}>
                                 <td>{order.id}</td>
                                 <td>{order.custName}</td>
+                                <td>{order.orderDate}</td>
                                 <td>{order.deliveryDate}</td>
                                 <td>{renderStatusPill(order.status)}</td>
-                                <td>{order.manager}</td>
+                                <td>{getContactName(order.custId)}</td>
                                 <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(order)}>פרטים</button>
                                     <button className="action-btn" onClick={() => openEdit(order)}>עריכה</button> </div> </td></tr>))} </tbody> </table> </div> </main>
         {active === "הזמנה חדשה" ? (
