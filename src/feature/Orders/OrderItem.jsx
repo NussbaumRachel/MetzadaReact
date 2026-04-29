@@ -154,7 +154,7 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
         <div className="form-section">
           <h3>פרטי דלת</h3>
           {doorsFields.map(field => {
-            const options = getOptions(field);
+            const options = getOptions(field.field);
             return (
               <div key={field.field} className="form-group">
                 <label>{field.hebrow}</label>
@@ -192,7 +192,7 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
         <div className="form-section">
           <h3>פרטי משקוף</h3>
           {framesFields.map(field => {
-            const options = getOptions(field);
+            const options = getOptions(field.field);
             return (
               <div key={field.field} className="form-group">
                 <label>{field.hebrow}</label>

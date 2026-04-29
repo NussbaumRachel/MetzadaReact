@@ -15,6 +15,8 @@ const ManagePossibleValuesButton = ({type}) => {
   const doorsFields = useSelector((state) => state.doors.doorsFields);
   const framesFields = useSelector((state) => state.frames.framesFields);
   const openModal = (field) => {
+    console.log("field", field);
+    
     setSelectedField(field);
     setIsModalOpen(true);
   };
@@ -23,7 +25,7 @@ const ManagePossibleValuesButton = ({type}) => {
     // כאן תוכל להוסיף את הלוגיקה להוסיף ערך חדש או לעדכן את הערך
     console.log(`Adding value ${newValue} to ${selectedField}`);
     // עליך להוסיף פעולה או API לאחסון הערכים החדשים
-    dispatch(CreateLimit({key:selectedField,values:[{id:0,key:selectedField,value:newValue}]}))
+    dispatch(CreateLimit({key:selectedField.field,values:[{id:0,key:selectedField.field,value:newValue}]}))
     setNewValue('');
     setIsModalOpen(false);
   };
@@ -52,17 +54,17 @@ dispatch(DeleteOneLimit(value))  };
             <h3>בחר שדה לעריכה</h3>
             <ul>
               {fields.map((fieldData) => (
-                <li key={fieldData.key} >
-                  <button onClick={() => openModal(fieldData.key)}>{fieldData.hebrow}</button>
+                <li key={fieldData.field} >
+                  <button onClick={() => openModal(fieldData)}>{fieldData.hebrow}</button>
                 </li>
               ))}
             </ul>
             {selectedField && (
               <div>
-                <h4>ערכים מוגבלים לשדה {selectedField}</h4>
+                <h4>ערכים מוגבלים לשדה {selectedField.hebrow}</h4>
                 <ul>
                   {possibleValues
-                    .find((fieldData) => fieldData.key === selectedField)
+                    .find((fieldData) => fieldData.key === selectedField.field)
                     ?.values.map((value) => (
                       <li key={value.key}>
                         {value.value}

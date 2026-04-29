@@ -86,7 +86,7 @@ const selectCustomer = (customer) => {
   });
 const addressFields = [
   { name: "street", label: "רחוב", type: "text" },
-  { name: "plot", label: "חלקה", type: "text" },
+  { name: "plot", label: "מגרש", type: "text" },
   { name: "buildingNum", label: "בניין", type: "text" },
   { name: "floor", label: "קומה", type: "text" },
   { name: "apartmentNum", label: "דירה", type: "text" },

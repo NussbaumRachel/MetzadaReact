@@ -10,7 +10,7 @@ const location = useLocation();
 const dispatch = useDispatch();
 const defaultName = location.state?.name || "";
   const [form, setForm] = useState({
-    id: null,
+    id: "",
     name: defaultName,
     phone: "",
     email: "",

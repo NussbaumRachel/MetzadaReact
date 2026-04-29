@@ -114,10 +114,10 @@ export default function AllFrames() {
       </Modal>
       <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
         <div className="modal-header">
-          <h2>מחיקת הזמנה</h2>
+          <h2>מחיקת משקוף</h2>
         </div>
         <div className="modal-body">
-          <p>האם אתה בטוח שברצונך למחוק את ההזמנה?</p>
+          <p>האם אתה בטוח שברצונך למחוק את המשקוף?</p>
         </div>
         <div className="modal-footer">
           <button className="btn-secondary" onClick={() => setIsDeleteOpen(false)}>ביטול</button>
