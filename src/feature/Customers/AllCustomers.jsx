@@ -254,10 +254,13 @@ const customers = useSelector(state => state.customers.customers) || [];
       )}
 
       {/* MODAL */}
-      <Modal isOpen={isFormOpen} onClose={() => setIsFormOpen(false)}>
+      <Modal isOpen={isFormOpen} onClose={() => { setIsFormOpen(false); setSelectedCustomer(null); }}>
         <CustomerForm
           existing={selectedCustomer}
-          onSave={() => setIsFormOpen(false)}
+          onSave={() => {
+            setIsFormOpen(false);
+            setSelectedCustomer(null);
+          }}
         />
       </Modal>
 

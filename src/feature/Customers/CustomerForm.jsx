@@ -50,7 +50,7 @@ const addCustomer = (form) => {
       <input name="address" value={form.address} onChange={handleChange} placeholder="כתובת"/>
       <input name="contactPersonName" value={form.contactPersonName} onChange={handleChange} placeholder="שם איש קשר"/>
       <input name="contactPersonPhone" value={form.contactPersonPhone} onChange={handleChange} placeholder="טלפון איש קשר"/>
-      <input name="cn" value={form.cn} onChange={handleChange} placeholder="מספר תעודת זהות"/>
+      <input name="cn" value={form.cn} onChange={handleChange} placeholder="מספר זיהוי"/>
       {/* <input name="notes" value={form.notes} onChange={handleChange} placeholder="הערות"/> */}
 
       <button onClick={()=>addCustomer(form)}>שמור</button>
