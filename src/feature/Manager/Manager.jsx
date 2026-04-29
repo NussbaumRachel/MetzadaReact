@@ -1,35 +1,85 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import HebrewDate from 'hebrew-date';
 import './Manager.css';
 
 const Manager = () => {
-    const addEmployee = () => {
-        console.log('הוספת עובד');
+
+    const [date, setDate] = useState(new Date());
+
+    const orders = [
+        { id: 1, custName: "יוסי כהן", deliveryDate: "2024-07-01" },
+        { id: 2, custName: "שרה לוי", deliveryDate: "2024-07-05" },
+        { id: 3, custName: "דוד ישראלי", deliveryDate: "2024-07-10" },
+    ];
+
+    const getOrdersByDate = (d) => {
+        return orders.filter(order =>
+            new Date(order.deliveryDate).toDateString() === d.toDateString()
+        );
     };
 
-    const viewEmployees = () => {
-        console.log('צפייה בעובדים');
+    const getHebrewDate = (d) => {
+        const h = new HebrewDate(d);
+        return `${h.day}`;
     };
-    const managePermissions = () => {
-        console.log('ניהול הרשאות גישה');
-    };
+
+    const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
     return (
-        <div className="orders-page">
-            <div className="orders-header">
-                <div className="orders-title-block">
-                    <h1 className="orders-title">ניהול עובדים</h1>
-                    <p className="orders-subtitle">עבודה עם עובדים והרשאות</p>
-                </div>
-                <div className="orders-actions">
-                    <button className="btn-primary" onClick={addEmployee}>הוסף עובד</button>
-                    <button className="btn-secondary" onClick={viewEmployees}>צפה בעובדים</button>
-                    <button className="btn-secondary" onClick={managePermissions}>נהל הרשאות</button>
-                </div>
+        <div className="calendar-layout">
+
+            {/* צד שמאל - ימי השבוע */}
+            <div className="week-days-column">
+                {days.map((d, i) => (
+                    <div key={i} className="week-day">{d}</div>
+                ))}
             </div>
-            {/* פה ייכנס התוכן של העובדים */}
-            <div className="orders-table-wrapper">
-                {/* טבלה או רשימה של עובדים */}
-                <p>שם תוכן העובדים ייכנס כאן</p>
+
+            {/* לוח */}
+            <div className="calendar-wrapper custom">
+
+                <Calendar
+                    onChange={setDate}
+                    value={date}
+                    calendarType="gregory"
+
+                    formatDay={(locale, date) => date.getDate()}
+
+                    tileContent={({ date, view }) => {
+                        if (view !== 'month') return null;
+
+                        const dailyOrders = getOrdersByDate(date);
+
+                        return (
+                            <div className="tile-inner">
+
+                                <div className="dates">
+                                    <span className="greg">{date.getDate()}</span>
+                                    <span className="heb">{getHebrewDate(date)}</span>
+                                </div>
+
+                                {dailyOrders.length > 0 && (
+                                    <div className="orders">
+                                        {dailyOrders.map(o => (
+                                            <span key={o.id} className="order">
+                                                #{o.id}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
+                            </div>
+                        );
+                    }}
+
+                    tileClassName={({ date, view }) => {
+                        if (view !== 'month') return null;
+                        return getOrdersByDate(date).length ? 'delivery' : null;
+                    }}
+                />
+
             </div>
         </div>
     );
