@@ -26,39 +26,10 @@ const PossibleValuesSlice = createSlice({
   reducers: {
 
   },
-  //   extraReducers: (builder) => {
-  //     builder
-  //       .addCase(checkValueLimits.pending, (state) => {
-  //         state.status = "loading"; // עדכון הסטטוס ל-"loading"
-  //       })
-  //       // כאשר הבקשה הושלמה בהצלחה
-  //       .addCase(checkValueLimits.fulfilled, (state, action) => {
-  //         state.status = "succeeded"; 
-  //         state.possibleValues = action.payload
-  //         // עדכון הסטטוס ל-"succeeded"
-  //       })
-  //       // כאשר הבקשה נכשלה
-  //       .addCase(checkValueLimits.rejected, (state, action) => {
-  //         state.status = "failed"; // עדכון הסטטוס ל-"failed"
-  //         state.error = action.error.message; // שמירת השגיאה במצב
-  //       })
-  //   }
+  
   extraReducers: (builder) => {
     builder
-      // fetchLimits
-      // .addCase(fetchLimits.pending, (state) => {
-      //   state.status = "loading";
-      // })
-      // .addCase(fetchLimits.fulfilled, (state, action) => {
-      //   state.status = "succeeded";
-      //   state.possibleValues = action.payload;
-      // })
-      // .addCase(fetchLimits.rejected, (state, action) => {
-      //   state.status = "failed";
-      //   state.error = action.error.message;
-      // })
 
-      // checkValueLimits (אם עדיין צריך)
       .addCase(checkValueLimits.pending, (state) => {
         state.status = "loading";
       })
@@ -108,11 +79,3 @@ const PossibleValuesSlice = createSlice({
 });
 export default PossibleValuesSlice.reducer;
 
-// ### הסבר על הקוד:
-
-// 1. **`addOrder`** – פעולה אסינכרונית שנועדה לשלוח את פרטי ההזמנה לשרת ולחזור עם התגובה.
-// 2. **`initialState`** – מצב התחלתי שמכיל מערך של הזמנות, סטטוס פעולה ושגיאות.
-// 3. **`extraReducers`** – חלק מהקוד שמנהל את מצב הסטטוס (ממתין, הושלם, נכשל) על פי תוצאות הקריאה ל-API.
-// 4. **`createSlice`** – הפונקציה שיוצרת את הסלייס עם הסטטוס והפונקציות המתאימות לניהול הזמנות.
-
-// אם תרצה להוסיף או לשנות משהו בקוד, אני כאן לעזור!

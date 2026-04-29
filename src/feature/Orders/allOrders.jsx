@@ -9,7 +9,7 @@ import { getAllDoors } from "../Doors/DoorsSlice";
 import { getAllOrders } from "../Orders/OrdersSlice"
 import { getAllFrames } from "../Frames/FramesSlice";
 import { checkAllLimits } from "../PossibleValues/PossibleValuesSlice";
-
+import { getAllCustomers } from "../Customers/CustomerSlice"
 function AllOrders() {
     const orders = useSelector(state => state.orders.orders)
     const statusO = useSelector(state => state.orders.status)
@@ -59,6 +59,7 @@ function AllOrders() {
             await dis(checkAllLimits());
             await dis(getAllOrders());
             await dis(getAllFrames());
+            await dis(getAllCustomers())
         };
 
         load();

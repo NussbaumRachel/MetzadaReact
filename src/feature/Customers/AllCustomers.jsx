@@ -2,15 +2,15 @@ import { useMemo, useState } from "react";
 import "./Customers.css";
 import CustomerForm from "./CustomerForm";
 import Modal from "../Modals/Modal";
-import { customersMock, ordersMock } from "./mockData";
+// import { customersMock, ordersMock } from "./mockData";
 import { useSelector } from "react-redux";
 
-const customers = customersMock;
+
 // const orders = ordersMock;
 
 function AllCustomers() {
 const orders = useSelector(state => state.orders.orders) || [];
-
+const customers = useSelector(state => state.customers.customers) || [];
   const [view, setView] = useState("cards");
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
@@ -216,7 +216,23 @@ const orders = useSelector(state => state.orders.orders) || [];
                   {c.isActive ? "🟢 פעיל" : "⚪ לא פעיל"}
                 </td>
 
-                <td>{c.totalOrders}</td>
+                <td><div
+                className="orders-folder"
+                onClick={() =>
+                  setOpenOrdersFor(openOrdersFor === c.id ? null : c.id)
+                }
+              >
+                📁 {c.totalOrders} הזמנות
+              </div></td>
+                {openOrdersFor === c.id && (
+                <div className="orders-list">
+                  {getCustomerOrders(c.id).map(o => (
+                    <div key={o.id} className="mini-order">
+                      💎 #{o.id} - {o.status}
+                    </div>
+                  ))}
+                </div>
+              )}
 
                 <td className="actions-cell">
                   <button onClick={() => {

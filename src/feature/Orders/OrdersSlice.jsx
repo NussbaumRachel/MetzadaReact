@@ -22,7 +22,7 @@ export const addNewOrderAsync = createAsyncThunk(
   async (order,{ dispatch }) => {
     const newOrder = {
       id: order.existingOrder?.id || 0,
-      custId: "1234",
+      custId: order.custId,
       custName: order.custName,
       deliveryDate: order.deliveryDate,
       street: "hhh",

@@ -16,7 +16,7 @@ const AddOrder = ({ existingOrder }) => {
 
   // const [loading, setLoading] = useState(true);
   const dis = useDispatch();
-  
+  const custs = useSelector(state => state.customers.customers) || []
 
  
 
@@ -74,9 +74,6 @@ console.log("items",items);
     };
   });
 };
-
-
-
   const createOrd = (e) => {
     console.log("createOrd");
    
@@ -84,6 +81,7 @@ console.log("items",items);
     const finalOrder = {
       ...order,
       orderItems: order.orderItems,
+      custId:custs.find(c => c.name == order.custName)?.id
     };
     dis(addNewOrderAsync(finalOrder));
   };
