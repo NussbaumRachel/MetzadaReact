@@ -175,8 +175,8 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
                 ) : (
                   <input
                     type={field.type}
-                    name={`doorDetails.${field.key}`}
-                    value={orderDetails.doorDetails[field.key] || ""}
+                    name={`doorDetails.${field.field}`}
+                    value={orderDetails.doorDetails[field.field] || ""}
                     onChange={handleInputChange}
                     className="form-input"
                   />

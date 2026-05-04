@@ -10,7 +10,10 @@ import { getAllOrders } from "../Orders/OrdersSlice"
 import { getAllFrames } from "../Frames/FramesSlice";
 import { checkAllLimits } from "../PossibleValues/PossibleValuesSlice";
 import { getAllCustomers } from "../Customers/CustomerSlice"
+import OrderDetails from "./OrderDetails";
+import { useNavigate } from "react-router-dom";
 function AllOrders() {   
+    const navigate = useNavigate();
     const customers = useSelector(state => state.customers.customers)
     const orders = useSelector(state => state.orders.orders)
     const statusO = useSelector(state => state.orders.status)
@@ -78,7 +81,8 @@ function AllOrders() {
     }, [statusO, statusD, statusL, statusF]);
     const openDetails = (order) => {
         setSelectedOrder(order);
-        setIsDetailsOpen(true);
+        navigate(`/order-details/${order.id}`);
+        // setIsDetailsOpen(true);
     };
 
     /**

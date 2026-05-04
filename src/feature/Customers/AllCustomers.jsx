@@ -4,6 +4,7 @@ import CustomerForm from "./CustomerForm";
 import Modal from "../Modals/Modal";
 // import { customersMock, ordersMock } from "./mockData";
 import { useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 
 
 // const orders = ordersMock;
@@ -20,7 +21,7 @@ const customers = useSelector(state => state.customers.customers) || [];
 
   const getCustomerOrders = (id) =>
     orders.filter(o => o.custId === id);
-
+  const navigate = useNavigate();
   const enrichedCustomers = useMemo(() => {
     return customers.map(c => {
       const custOrders = getCustomerOrders(c.id);
@@ -181,7 +182,9 @@ const customers = useSelector(state => state.customers.customers) || [];
               {openOrdersFor === c.id && (
                 <div className="orders-list">
                   {getCustomerOrders(c.id).map(o => (
-                    <div key={o.id} className="mini-order">
+                    <div key={o.id} className="mini-order"  onClick={() => navigate(`/order-details/${o.id}`)} // ניווט לדף פרטי ההזמנה
+                                     style={{ cursor: 'pointer', color: '#f5d26a' }} // סגנון עבור הכרטיס של ההזמנה
+                    >
                       💎 #{o.id} - {o.status}
                     </div>
                   ))}
@@ -227,7 +230,9 @@ const customers = useSelector(state => state.customers.customers) || [];
                 {openOrdersFor === c.id && (
                 <div className="orders-list">
                   {getCustomerOrders(c.id).map(o => (
-                    <div key={o.id} className="mini-order">
+                    <div key={o.id} className="mini-order"  onClick={() => navigate(`/order-details/${o.id}`)} // ניווט לדף פרטי ההזמנה
+                                     style={{ cursor: 'pointer', color: '#f5d26a' }} // סגנון עבור הכרטיס של ההזמנה
+                    >
                       💎 #{o.id} - {o.status}
                     </div>
                   ))}

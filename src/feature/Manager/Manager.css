@@ -70,7 +70,7 @@
     border-color: #f5d26a;
 }
 
-.orders-table-wrapper {
+/* .orders-table-wrapper {
     margin-top: 8px;
     border-radius: 16px;
     border: 1px solid rgba(120, 98, 32, 0.9);
@@ -110,7 +110,7 @@
 .orders-table th {
     background-color: #444;
     color: white;
-}
+} */
 .calendar-wrapper {
     margin-top: 30px;
     padding: 20px;
