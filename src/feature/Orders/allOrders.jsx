@@ -97,6 +97,54 @@ function AllOrders() {
         const customer = customers.find(c => c.id === custId);
         return customer ? customer.contactPersonName : "לא נמצא";
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    const displayOrdersInExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(orders); // המרת פרטי ההזמנות ל-sheet
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "הזמנות"); // הוספת ה-sheet ל-workbook
+    const excelData = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+    // הצגת קובץ האקסל
+    const blob = new Blob([s2ab(excelData)], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank'); // פתיחת קובץ האקסל בקטע חדש
+};
+
+const s2ab = (s) => {
+    const buf = new ArrayBuffer(s.length);
+    const arr = new Uint8Array(buf);
+    for (let i = 0; i < s.length; i++) {
+        arr[i] = s.charCodeAt(i) & 0xFF;
+    }
+    return buf;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     const exportToExcel = () => {
         // יצירת WorkBook
         const ws = XLSX.utils.json_to_sheet(orders); // המרת נתונים מהמערך ל-sheet
@@ -141,6 +189,9 @@ function AllOrders() {
                 <div className="orders-actions">
                     <button className="btn-primary" onClick={() => setActive("הזמנה חדשה")}>הזמנה חדשה</button>
                     <button className="btn-secondary" onClick={exportToExcel}>ייצוא לאקסל</button>
+                    <button className="btn-secondary" onClick={displayOrdersInExcel}>
+    הצג את פרטי ההזמנות בקובץ Excel
+</button>
                 </div>
             </div>
             <div className="orders-filters">

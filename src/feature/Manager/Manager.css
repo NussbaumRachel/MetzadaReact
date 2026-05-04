@@ -1,7 +1,7 @@
-.orders-page {
+/* /* .orders-page {
 
     padding: 20px; /* Updated padding */
-}
+/* } */
 
 .orders-header {
     display: flex;
@@ -158,4 +158,4 @@
         background: #d9cd4b !important;
 
     transform: scale(1.05);
-}
+}  

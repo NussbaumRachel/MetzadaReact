@@ -5,6 +5,7 @@ import OrderItem from "../Orders/OrderItem";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteFrame, getAllFrames } from "./FramesSlice";
 import ManagePossibleValuesButton from "../PossibleValues/ManagePossibleValuesButton";
+import "../Orders/orders.css";
 
 export default function AllFrames() {
   const frames = useSelector(state => state.frames.frames) || [];

@@ -1,4 +1,4 @@
-
+import "../Orders/orders.css";
 import React, { use } from "react";
 import { useState } from "react"
 import Modal from "../Modals/Modal";
