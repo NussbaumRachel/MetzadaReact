@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteFrame, getAllFrames } from "./FramesSlice";
 import ManagePossibleValuesButton from "../PossibleValues/ManagePossibleValuesButton";
 import "../Orders/orders.css";
+import OrderItemDetails from "../Orders/OrderItemDetails";
 
 export default function AllFrames() {
   const frames = useSelector(state => state.frames.frames) || [];
@@ -72,44 +73,13 @@ export default function AllFrames() {
         <ManagePossibleValuesButton type={"2"}/></Modal>)}
       <Modal isOpen={isDetailsOpen} onClose={() => setIsDetailsOpen(false)}>
         <div className="modal-header">
-          <h2>פרטי הזמנה</h2>
+          <h2>פרטי משקוף</h2>
         </div>
 
-        {selectedFrame && (
+        {selectedFrame && 
+        (
           <div className="modal-body">
-            <div className="details-grid">
-              <div><strong>מספר:</strong> {selectedFrame.id}</div>
-              <div><strong>לקוח:</strong> {selectedFrame.custName}</div>
-              <div><strong>תאריך:</strong> {selectedFrame.deliveryDate}</div>
-              <div><strong>סטטוס:</strong> {selectedFrame.status}</div>
-              <div><strong>מנהל:</strong> {selectedFrame.manager}</div>
-            </div>
-
-            <h3>פריטי הזמנה</h3>
-            <div className="items-list">
-              {selectedFrame.orderItems?.map((item, i) => (
-                <div key={i} className="item-card">
-                  <div>סוג: {item.itemType}</div>
-                  <div>כמות: {item.quantity}</div>
-
-                  {item.itemType === "1" && (
-                    <>
-                      <div>רוחב: {item.frameDetails?.width}</div>
-                      <div>גובה: {item.frameDetails?.height}</div>
-                      <div>צבע: {item.frameDetails?.color}</div>
-                    </>
-                  )}
-
-                  {item.itemType === "2" && (
-                    <>
-                      <div>רוחב: {item.frameDetails?.width}</div>
-                      <div>גובה: {item.frameDetails?.height}</div>
-                      <div>פרופיל: {item.frameDetails?.profile}</div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
+            <OrderItemDetails item={selectedFrame} />
           </div>
         )}
       </Modal>
@@ -133,7 +103,7 @@ export default function AllFrames() {
           />
       </Modal>
       <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}>
-        <h2>עריכת משקוף</h2>
+        <h2>הוספת משקוף</h2>
         <OrderItem
           item={{ itemType: "2" }}
           isOrder={false} 

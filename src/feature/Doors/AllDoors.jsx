@@ -6,6 +6,7 @@ import OrderItem from "../Orders/OrderItem";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteDoor, getAllDoors } from "./DoorsSlice";
 import ManagePossibleValuesButton from "../PossibleValues/ManagePossibleValuesButton";
+import OrderItemDetails from "../Orders/OrderItemDetails";
 
 
 export default function AllDoors() {
@@ -75,44 +76,12 @@ export default function AllDoors() {
 
             <Modal isOpen={isDetailsOpen} onClose={() => setIsDetailsOpen(false)}>
                 <div className="modal-header">
-                    <h2>פרטי הזמנה</h2>
+                    <h2>פרטי דלת</h2>
                 </div>
 
                 {selectedDoor && (
                     <div className="modal-body">
-                        <div className="details-grid">
-                            <div><strong>מספר:</strong> {selectedDoor.id}</div>
-                            <div><strong>לקוח:</strong> {selectedDoor.custName}</div>
-                            <div><strong>תאריך:</strong> {selectedDoor.deliveryDate}</div>
-                            <div><strong>סטטוס:</strong> {selectedDoor.status}</div>
-                            <div><strong>מנהל:</strong> {selectedDoor.manager}</div>
-                        </div>
-
-                        <h3>פריטי הזמנה</h3>
-                        <div className="items-list">
-                            {selectedDoor.orderItems?.map((item, i) => (
-                                <div key={i} className="item-card">
-                                    <div>סוג: {item.itemType}</div>
-                                    <div>כמות: {item.quantity}</div>
-
-                                    {item.itemType === "1" && (
-                                        <>
-                                            <div>רוחב: {item.doorDetails?.width}</div>
-                                            <div>גובה: {item.doorDetails?.height}</div>
-                                            <div>צבע: {item.doorDetails?.color}</div>
-                                        </>
-                                    )}
-
-                                    {item.itemType === "2" && (
-                                        <>
-                                            <div>רוחב: {item.frameDetails?.width}</div>
-                                            <div>גובה: {item.frameDetails?.height}</div>
-                                            <div>פרופיל: {item.frameDetails?.profile}</div>
-                                        </>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
+                        <OrderItemDetails item={selectedDoor} />
                     </div>
                 )}
             </Modal>
@@ -129,25 +98,13 @@ export default function AllDoors() {
                 </div>
             </Modal>
             <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}>
-                    <h2>עריכת משקוף</h2>
+                    <h2>הוספת דלת</h2>
                     <OrderItem
                       item={{ itemType: "1" }}
                       isOrder={false} 
                       isNew={true}
                       />
                   </Modal>
-            {/* <Modal isEditOpen={isEditOpen} onClose={() => setIsEditOpen(false)}>
-            <div className="modal-header">
-                <h2>עריכת הזמנה</h2>
-            </div>
-            <div className="modal-body">
-                <p>האם אתה בטוח שברצונך למחוק את ההזמנה?</p>
-            </div>
-            <div className="modal-footer">
-                <button className="btn-secondary" onClick={() => setIsDeleteOpen(false)}>ביטול</button>
-                <button className="btn-danger" onClick={handleDelete}>מחק</button>
-            </div>
-        </Modal> */}
             <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)}>
                 <h2>עריכת דלת</h2>
                 <OrderItem

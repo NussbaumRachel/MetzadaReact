@@ -39,3 +39,8 @@ export const addFrame = async (newFrame) => {
            .then(res => res.data)
    );   
   }
+   export const updateFrame = async (updatedFrame) => {
+       return fetchWithRetry(() =>
+       axios.put("https://localhost:7253/api/DoorFrame/Update",updatedFrame)
+      .then(res => res.data))     
+  }

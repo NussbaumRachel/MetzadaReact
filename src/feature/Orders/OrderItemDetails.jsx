@@ -17,13 +17,16 @@ const OrderItemDetails = ({ item }) => {
         } else if (item.itemType === 2) {
             setItemDetails(frames.find(f => f.id === item.itemId));
         }
+        else {
+            setItemDetails(item);
+        }
     }, [item, doors, frames]);
 
     const fields = item.itemType === 1 ? doorFields : frameFields;
     return (
         <div className="lux-item-card">
             <div className="lux-item-header">
-                <span className="lux-badge">#{item.itemId}</span>
+                <span className="lux-badge">#{item.itemId || item.id}</span>
                 <span className="lux-qty">x{item.quantity}</span>
             </div>
 

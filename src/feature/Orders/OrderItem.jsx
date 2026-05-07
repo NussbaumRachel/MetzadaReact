@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addOrder } from "../../Api/OrdersApi";
-import { createDoor } from "../Doors/DoorsSlice";
-import { createFrame } from "../Frames/FramesSlice";
+import { createDoor, createDoorWithFile, uploadDoorMachineFile } from "../Doors/DoorsSlice";
+import { createFrame, updateTheFrame } from "../Frames/FramesSlice";
+import { updateTheDoor } from "./../Doors/DoorsSlice";
+import { log } from "three/src/utils.js";
+import { or } from "three/src/nodes/math/OperatorNode.js";
+import { set } from "zod";
 const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
   const doors = useSelector(state => state.doors.doors);
   const frames = useSelector(state => state.frames.frames);
   const dispatch = useDispatch();
 
   const possibleValues = useSelector(state => state.possibleValues.possibleValues);
-
+  const [file, setFile] = useState(null);
   // state מקומי של פריט ההזמנה
   const [orderDetails, setOrderDetails] = useState({
     itemType: "1", //  "2" = דלת ="1" , משקוף
@@ -56,41 +60,61 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
   const getOptions = (field) => {
     return possibleValues.find(v => v.key === field)?.values || []
   };
+const [selectedFile, setSelectedFile] = useState(null);
+
+const handleFileChange = (file) => {
+  if (!file) return;
+  setSelectedFile(file);
+setFile(file);
+  // שמירת הקובץ ב-state כדי לשלוח לשרת
+  // setOrderDetails(prev => ({
+  //   ...prev,
+  //   doorDetails: { ...prev.doorDetails, TextFileForTheMachine: file }
+  // }));
+};
+const handleUploadFile = () => {
+  if (!orderDetails.doorDetails.TextFileForTheMachine) {
+    alert("אנא בחר קובץ לפני ההעלאה.");
+    return;
+  }
+  dispatch(uploadDoorMachineFile({ doorId: item.itemId, file: orderDetails.doorDetails.TextFileForTheMachine }));
+};
 
   // useEffect לאתחול פריט מה-props
   useEffect(() => {
     if (!item) return;
-    if(!isNew){
-    let updated = { ...orderDetails, ...item };
-    if (doors.length > 0 && item.itemId != 0 && item.itemType === 1) {
-      const door = doors.find(d => d.id === item.itemId);
-      if (door) {
-        updated = { ...updated, doorDetails: door, frameDetails: orderDetails.frameDetails, itemType: "1" };
-        if (isOrder) {
-          updated = { ...updated, quantity: item.quantity };
-          updateItem(index, updated);
+    if (!isNew) {
+      let updated = { ...orderDetails, ...item };
+      if (doors.length > 0 && item.itemId != 0 && item.itemType === 1) {
+        const door = doors.find(d => d.id === item.itemId);
+        if (door) {
+          updated = { ...updated, doorDetails: door, frameDetails: orderDetails.frameDetails, itemType: "1" };
+          if (isOrder) {
+            updated = { ...updated, quantity: item.quantity };
+            updateItem(index, updated);
+          }
         }
       }
-    }
-    // מוודאים שפרטי משקוף קיימים אם הפריט הוא משקוף
-    if (frames.length > 0 && item.itemId != 0 && item.itemType === 2) {
-      const frame = frames.find(d => d.id === item.itemId);
-      if (frame) {
-        updated = { ...updated, frameDetails: frame, doorDetails: orderDetails.doorDetails, itemType: "2" };
-        if (isOrder) {
-          updated = { ...updated, quantity: item.quantity };
-          updateItem(index, updated);
+      // מוודאים שפרטי משקוף קיימים אם הפריט הוא משקוף
+      if (frames.length > 0 && item.itemId != 0 && item.itemType === 2) {
+        const frame = frames.find(d => d.id === item.itemId);
+        if (frame) {
+          updated = { ...updated, frameDetails: frame, doorDetails: orderDetails.doorDetails, itemType: "2" };
+          if (isOrder) {
+            updated = { ...updated, quantity: item.quantity };
+            updateItem(index, updated);
+          }
         }
       }
+      console.log("updated", updated);
+      setOrderDetails(updated);
     }
-    console.log("updated", updated);
-    setOrderDetails(updated);}
-    else{
-      if(item.itemType === "1"){
+    else {
+      if (item.itemType === "1") {
         let updated = { ...orderDetails, doorDetails: orderDetails.doorDetails, itemType: "1" };
         setOrderDetails(updated);
       }
-      else if(item.itemType === "2"){
+      else if (item.itemType === "2") {
         let updated = { ...orderDetails, frameDetails: orderDetails.frameDetails, itemType: "2" };
         setOrderDetails(updated);
       }
@@ -107,7 +131,9 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
     setOrderDetails(updated);
     updateItem(index, updated);
   };
-
+  const updateItemNotInOrder = () => {
+    orderDetails.itemType == "1" ? dispatch(updateTheDoor({ id: item.itemId, ...orderDetails.doorDetails })) : dispatch(updateTheFrame({ id: item.itemId, ...orderDetails.frameDetails }));
+  }
   // שינוי כל שדה בפרטי דלת או משקוף
   const handleInputChange = (e) => {
     e.preventDefault();
@@ -124,9 +150,12 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
       updateItem(index, updated);
   };
   const addItem = () => {
-    if(orderDetails.itemType == "1")
-      dispatch(createDoor(orderDetails.doorDetails))
-    else{
+    if (orderDetails.itemType == "1")
+      if (file)
+        dispatch(createDoorWithFile({ doorDetails: orderDetails.doorDetails, file }))
+      else
+        dispatch(createDoor(orderDetails.doorDetails))
+    else {
       dispatch(createFrame(orderDetails.frameDetails))
     }
   }
@@ -184,6 +213,16 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
               </div>
             );
           })}
+          <label>קובץ למכונה</label>
+          <input
+            type="file"
+            accept=".txt"
+            onChange={(e) => handleFileChange(e.target.files[0])}
+          />
+          {orderDetails.doorDetails.TextFileForTheMachine && (
+            <p>קובץ נבחר: {orderDetails.doorDetails.TextFileForTheMachine.name}</p>
+          )}
+          <button onClick={handleUploadFile}>העלה קובץ למכונה</button>
         </div>
       )}
 
@@ -234,7 +273,8 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
             onChange={handleDoorFrameChange}
           />
         </div>)}
-        {isNew && <button onClick={() => {orderDetails.itemType == "1" ?addItem(orderDetails.doorDetails) :addItem(orderDetails.frameDetails) }}>הוסף פריט</button>}
+      {isNew && <button onClick={() => { orderDetails.itemType == "1" ? addItem(orderDetails.doorDetails) : addItem(orderDetails.frameDetails) }}>הוסף פריט</button>}
+      {!isOrder && !isNew && <button onClick={() => updateItemNotInOrder(index, orderDetails)}>עדכן פריט</button>}
     </div>
   );
 };

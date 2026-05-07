@@ -9,44 +9,40 @@ const fetchWithRetry = async (fn, retries = 3, delay = 500) => {
   }
 };
 export const addDoor = async (newDoor) => {
-    // try {
-      // שליחת בקשה ל-API להוסיף הזמנה חדשה
-       return fetchWithRetry(() =>
-         axios.post("https://localhost:7253/api/Door/Add", newDoor)    
-         .then(res => res.data)
+  // try {
+  // שליחת בקשה ל-API להוסיף הזמנה חדשה
+  return fetchWithRetry(() =>
+    axios.post("https://localhost:7253/api/Door/Add", newDoor)
+      .then(res =>  res.data)
   );
-     
-
-      // מחזירים את התגובה מהשרת
-    // } catch (error) {
-      // טיפול בשגיאות והחזרת שגיאה מתאימה אם קרתה בעיה
-    //   throw new Error(error.response ? error.response.data : "Error adding order");
-    // }
-  }
-//   export const getDoors = async () => {
-//     // try {
-//       // שליחת בקשה ל-API להוסיף הזמנה חדשה
-      
-//       const response = await axios.get("https://localhost:7253/api/Door/GetAll");
-//       debugger
-//       // מחזירים את התגובה מהשרת
-//       return response.data;
-//     // } catch (error) {
-//       // טיפול בשגיאות והחזרת שגיאה מתאימה אם קרתה בעיה
-//     //   throw new Error(error.response ? error.response.data : "Error adding order");
-//     // }
-//   }
+};
 export const getDoors = async () => {
   return fetchWithRetry(() =>
     axios.get("https://localhost:7253/api/Door/GetAll")
       .then(res => res.data)
   );
-}; 
+};
 export const deleteDoorById = async (id) => {
 
-       return fetchWithRetry(() =>
-         axios.delete(`https://localhost:7253/api/Door/Delete?id=${id}`)
-           .then(res => res.data)
-   );   
+  return fetchWithRetry(() =>
+    axios.delete(`https://localhost:7253/api/Door/Delete?id=${id}`)
+      .then(res => res.data)
+  );
 
-       }
+}
+export const updateDoor = async (updatedDoor) => {
+  return fetchWithRetry(() =>
+    axios.put("https://localhost:7253/api/Door/Update", updatedDoor)
+      .then(res => res.data)
+  );
+}
+export const uploadDoorFile = async (doorId, file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return fetchWithRetry(() =>
+    axios.post(`https://localhost:7253/api/Door/UploadDoorFile/${doorId}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    }).then(res => res.data)
+  );
+};
