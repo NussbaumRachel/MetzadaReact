@@ -7,11 +7,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteDoor, getAllDoors } from "./DoorsSlice";
 import ManagePossibleValuesButton from "../PossibleValues/ManagePossibleValuesButton";
 import OrderItemDetails from "../Orders/OrderItemDetails";
-
+import GenerateDoor from "../Orders/GenerateDoor";
 
 export default function AllDoors() {
     const doors = useSelector(state => state.doors.doors) || [];
     const dispatch = useDispatch();
+    const [selectedDoor2, setSelectedDoor2] = useState(null);
+const [isOpen, setIsOpen] = useState(false);
     const [selectedDoor, setSelectedDoor] = useState(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -65,7 +67,16 @@ export default function AllDoors() {
                                 <td>{d.height}</td>
                                 <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(d)}>פרטים</button>
                                     <button className="action-btn" onClick={() => openDelete(d)}>מחיקה</button>
-                                    <button className="action-btn" onClick={() => openEdit(d)}>עריכה</button> </div> </td>
+                                    <button className="action-btn" onClick={() => openEdit(d)}>עריכה</button> 
+                                        
+                                        <button
+                                            onClick={() => {
+                                        setSelectedDoor2(d);
+                                        setIsOpen(true);
+                                    }}
+                                    >
+                                    יצירת הדמיה
+                                    </button></div> </td>
                             </tr>
                         ))}
                     </tbody>
@@ -100,17 +111,27 @@ export default function AllDoors() {
             <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}>
                     <h2>הוספת דלת</h2>
                     <OrderItem
-                      item={{ itemType: "1" }}
-                      isOrder={false} 
-                      isNew={true}
-                      />
-                  </Modal>
+                    item={{ itemType: "1" }}
+                    isOrder={false} 
+                    isNew={true}
+                    />
+                </Modal>
             <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)}>
                 <h2>עריכת דלת</h2>
                 <OrderItem
                     item={{ doorDetails: selectedDoor, itemType: "1" }}
                     isOrder={false} />
             </Modal>
+            {
+            isOpen && selectedDoor2 && (
+            <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <GenerateDoor
+        door={selectedDoor2}
+        onClose={() => setIsOpen(false)}
+        />
+    </Modal>
+    )
+}
         </main>
     );
 }

@@ -1,30 +1,3 @@
-// import axios from "axios";
-
-// export default function ExportOrdersExcel() {
-
-//   const downloadExcel = async () => {
-//     const res = await axios.get(
-//       "https://localhost:7253/api/Order/export-excel",
-//       { responseType: "blob" }
-//     );
-
-//     const url = window.URL.createObjectURL(new Blob([res.data]));
-
-//     const link = document.createElement("a");
-//     link.href = url;
-//     link.setAttribute("download", "orders.xlsx");
-
-//     document.body.appendChild(link);
-//     link.click();
-//     link.remove();
-//   };
-
-//   return (
-//     <button onClick={downloadExcel}>
-//       ייצוא הזמנות לאקסל
-//     </button>
-//   );
-// }
 
 import axios from "axios";
 

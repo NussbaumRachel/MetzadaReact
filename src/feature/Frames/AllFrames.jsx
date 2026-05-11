@@ -6,17 +6,19 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteFrame, getAllFrames } from "./FramesSlice";
 import ManagePossibleValuesButton from "../PossibleValues/ManagePossibleValuesButton";
 import "../Orders/orders.css";
+import GenerateDoor from "../Orders/GenerateDoor";
 import OrderItemDetails from "../Orders/OrderItemDetails";
 
 export default function AllFrames() {
   const frames = useSelector(state => state.frames.frames) || [];
   const dispatch = useDispatch();
+  const [selectedDoor2, setSelectedDoor2] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedFrame, setselectedFrame] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-    const [isAddOpen, setIsAddOpen] = useState(false);
-
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isManagePossibleValuesOpen, setIsManagePossibleValuesOpen] = useState(false);
   const openDetails = (frame) => {
     setselectedFrame(frame);
@@ -63,7 +65,15 @@ export default function AllFrames() {
                 <td>{f.height}</td>
                 <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(f)}>פרטים</button>
                   <button className="action-btn" onClick={() => openDelete(f)}>מחיקה</button>
-                  <button className="action-btn" onClick={() => openEdit(f)}>עריכה</button> </div> </td>
+                  <button className="action-btn" onClick={() => openEdit(f)}>עריכה</button> 
+                  <button
+                                            onClick={() => {
+                                        setSelectedDoor2(f);
+                                        setIsOpen(true);
+                                    }}
+                                    >
+                                    יצירת הדמיה
+                                    </button></div> </td>
               </tr>
             ))}
           </tbody>
@@ -110,6 +120,16 @@ export default function AllFrames() {
           isNew={true}
           />
       </Modal>
+      {
+            isOpen && selectedDoor2 && (
+            <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <GenerateDoor
+        door={selectedDoor2}
+        onClose={() => setIsOpen(false)}
+        />
+    </Modal>
+    )
+}
     </main>
   );
 }

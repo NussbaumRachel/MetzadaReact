@@ -12,7 +12,6 @@ import { getAllFrames } from "../Frames/FramesSlice";
 import { checkAllLimits } from "../PossibleValues/PossibleValuesSlice";
 import { getAllCustomers } from "../Customers/CustomerSlice"
 import OrderDetails from "./OrderDetails";
-import GenerateDoor from "./GenerateDoor";
 import { useNavigate } from "react-router-dom";
 function AllOrders() {   
     const navigate = useNavigate();
@@ -41,24 +40,7 @@ function AllOrders() {
     };
     const dis = useDispatch()
     const [loading, setLoading] = useState(true);
-    //     useEffect(
-    //         () => {
-    //             if (status == "") {
-    //                 console.log("status", status);
-    //                 dis(getAllOrders());
-    //                 dis(fetchLimits());
-    //                 setLoading(false);
-    //             }
-    //         }
-    //         , [status, dis]
-    //     )
-
-    //     /**
-    //  * פתיחת חלונית פרטים
-    //  */
-    //     // useEffect(() => {       
-    //     //    dis(fetchLimits());
-    //     // }, [])
+    
     useEffect(() => {
         const load = async () => {
             await dis(getAllDoors());
@@ -84,7 +66,7 @@ function AllOrders() {
     const openDetails = (order) => {
         setSelectedOrder(order);
         navigate(`/order-details/${order.id}`);
-        // setIsDetailsOpen(true);
+       
     };
 
     /**
@@ -101,97 +83,22 @@ function AllOrders() {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-    const displayOrdersInExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(orders); // המרת פרטי ההזמנות ל-sheet
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "הזמנות"); // הוספת ה-sheet ל-workbook
-    const excelData = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-
-    // הצגת קובץ האקסל
-    const blob = new Blob([s2ab(excelData)], { type: "application/octet-stream" });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank'); // פתיחת קובץ האקסל בקטע חדש
-};
-
-const s2ab = (s) => {
-    const buf = new ArrayBuffer(s.length);
-    const arr = new Uint8Array(buf);
-    for (let i = 0; i < s.length; i++) {
-        arr[i] = s.charCodeAt(i) & 0xFF;
-    }
-    return buf;
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    const exportToExcel = () => {
-        // יצירת WorkBook
-        const ws = XLSX.utils.json_to_sheet(orders); // המרת נתונים מהמערך ל-sheet
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "orders"); // הוספת ה-sheet ל-workbook
-
-        // יצירת קובץ Excel להורדה
-        XLSX.writeFile(wb, "orders.xlsx");
-    };
     if (loading) {
         return <div className="loading">מתחיל טעינה...</div>;
     }
     return (<div>
-        {/* <header className="header">
-            <div className="logo-area">
-                <div className="logo-placeholder"> לוגו<br />מצדה
-                </div>
-                <div className="site-title">מצדה - ניהול מפעל דלתות</div>
-            </div>
-            <nav className="nav-menu">
-                {menuItems.map((item) => (<div key={item} className={`nav-item ${active === item ? "active" : ""}`} onClick={() => setActive(item)} > {item} </div>))}
-            </nav>
-        </header> */}
+       
         <main className="orders-page">
             <div className="orders-header">
                 <div className="orders-title-block">
                     <h1 className="orders-title">הזמנות</h1>
-                    {/* <section className="dashboard-graph">
-                        <h2 className="graph-title">סטטוס הזמנות במפעל</h2>
-                        <p className="graph-subtitle"> תמונת מצב מהירה של כל ההזמנות לפי סטטוס. </p>
-                        <div className="graph-wrapper">
-                            {[{ label: "פתוחות", value: 24, className: "open" },
-                            { label: "בתהליך", value: 16, className: "in-progress" },
-                            { label: "הושלמו", value: 8, className: "done" },
-                            { label: "ביטול / חריגים", value: 2, className: "cancelled" }].map((item) => (<div key={item.label} className="graph-column">
-                                <div className={`graph-bar ${item.className}`} style={{ "--bar-value": item.value }} > <span className="graph-value">{item.value}</span>
-                                </div> <div className="graph-label">{item.label}</div> </div>))} <div className="graph-glow" />
-                        </div>
-                    </section> */}
+                    
                     <p className="orders-subtitle"> ניהול מרכזי של כל הזמנות המפעל – סטטוס ייצור, לקוחות, כמויות ותאריכי אספקה. </p>
                 </div>
                 <div className="orders-actions">
                     <button className="btn-primary" onClick={() => setActive("הזמנה חדשה")}>הזמנה חדשה</button>
                    <ExportOrdersExcel />
-                   <GenerateDoor />
+                   
                 </div>
             </div>
             <div className="orders-filters">
