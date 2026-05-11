@@ -4,8 +4,9 @@ import { addNewOrderAsync } from "./OrdersSlice";
 import { fetchLimits } from "../PossibleValues/PossibleValuesSlice";
 import OrderItem from "./OrderItem";
 import './AddOrder.css';
-import { z } from "zod";
+import { date, z } from "zod";
 import { useNavigate } from "react-router-dom";
+import { log } from "three/src/utils.js";
 
 
 const AddOrder = ({ existingOrder }) => {
@@ -22,7 +23,7 @@ const AddOrder = ({ existingOrder }) => {
   const [search, setSearch] = useState("");
   const [filteredCustomers, setFilteredCustomers] = useState(custs);
   const [showDropdown, setShowDropdown] = useState(false);
-
+  const [isChange,setIsChange] = useState(false)
   useEffect(() => {
     if (!search) {
       setFilteredCustomers([]);
@@ -69,17 +70,11 @@ const AddOrder = ({ existingOrder }) => {
     { name: "apartmentNum", label: "דירה", type: "text" },
     { name: "price", label: "מחיר", type: "number" }
   ];
-  // const [loading, setLoading] = useState(true);
   const dis = useDispatch();
-
-
-
-
-  /**
-   * טעינת נתונים קיימים לאינפוטים
-   */
   useEffect(() => {
     if (existingOrder) {
+      console.log("existing order",existingOrder);
+      
       setOrder({
         custName: existingOrder.custName || "",
         deliveryDate: existingOrder.deliveryDate || "",
@@ -91,9 +86,12 @@ const AddOrder = ({ existingOrder }) => {
         price: existingOrder.price || "",
         notes: existingOrder.notes || "",
         orderItems: [],
-        existingOrder: existingOrder
+        orderDate: existingOrder.orderDate || new Date().toISOString(),
+        updateDate: new Date().toISOString(),
+        existingOrder: existingOrder,
+        isChange:isChange
       });
-
+      log("order",order);
       extendsOrderItems(existingOrder.orderItems);
     }
   }, []);
@@ -109,6 +107,8 @@ const AddOrder = ({ existingOrder }) => {
     return newOis
   }
   const handleInputChange = (e) => {
+    if(existingOrder)
+      {setIsChange(true)}
     const { name, value } = e.target;
     setOrder(prev => ({
       ...prev,
@@ -232,9 +232,10 @@ const AddOrder = ({ existingOrder }) => {
                 <OrderItem
                   index={index}
                   item={item}
-                  updateItem={updateItem} // הורך, אין צורך כאן
+                  updateItem={updateItem} 
                   isOrder={true}
                   isNew={false}
+                  setIsChange={setIsChange}
                 />
               {/* )} */}
             </div>

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { log } from 'three/src/utils.js';
 const fetchWithRetry = async (fn, retries = 3, delay = 500) => {
   try {
     return await fn();
@@ -48,4 +49,12 @@ export const addOrder = async (newOrder) => {
       // טיפול בשגיאות והחזרת שגיאה מתאימה אם קרתה בעיה
     //   throw new Error(error.response ? error.response.data : "Error adding order");
     // }
+  }
+
+  export const deleteOrderItem = async (orderItem) => {
+    log("orderItemInApi:",orderItem)
+    return fetchWithRetry(() =>
+      axios.delete(`https://localhost:7253/api/OrderItem/Delete`,  {data:orderItem} )
+        .then(res => res.data)
+    );
   }

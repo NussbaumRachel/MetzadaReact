@@ -40,7 +40,6 @@ function AllOrders() {
     };
     const dis = useDispatch()
     const [loading, setLoading] = useState(true);
-    
     useEffect(() => {
         const load = async () => {
             await dis(getAllDoors());
@@ -82,12 +81,10 @@ function AllOrders() {
         return customer ? customer.contactPersonName : "לא נמצא";
     }
 
-
     if (loading) {
         return <div className="loading">מתחיל טעינה...</div>;
     }
     return (<div>
-       
         <main className="orders-page">
             <div className="orders-header">
                 <div className="orders-title-block">
@@ -113,9 +110,11 @@ function AllOrders() {
                             <th>מס' הזמנה</th>
                             <th>לקוח</th>
                             <th>תאריך הזמנה</th>
+                            <th>תאריך עדכון אחרון</th>
                             <th>תאריך אספקה</th>
                             <th>סטטוס</th>
                             <th>איש קשר</th>
+                            <th>הערות</th>
                             <th>פעולות</th>
                         </tr>
                     </thead>
@@ -126,8 +125,10 @@ function AllOrders() {
                                 <td>{order.id}</td>
                                 <td>{order.custName}</td>
                                 <td>{order.orderDate}</td>
+                                <td>{order.updateDate}</td>
                                 <td>{order.deliveryDate}</td>
                                 <td>{renderStatusPill(order.status)}</td>
+                                <td>{order.notes}</td>
                                 <td>{getContactName(order.custId)}</td>
                                 <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(order)}>פרטים</button>
                                     <button className="action-btn" onClick={() => openEdit(order)}>עריכה</button> </div> </td></tr>))} </tbody> </table> </div> </main>

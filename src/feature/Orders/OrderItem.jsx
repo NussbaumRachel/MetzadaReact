@@ -4,10 +4,11 @@ import { addOrder } from "../../Api/OrdersApi";
 import { createDoor, createDoorWithFile, uploadDoorMachineFile } from "../Doors/DoorsSlice";
 import { createFrame, updateTheFrame } from "../Frames/FramesSlice";
 import { updateTheDoor } from "./../Doors/DoorsSlice";
+import { deleteItemFromOrder } from "./OrdersSlice";
 import { log } from "three/src/utils.js";
 import { or } from "three/src/nodes/math/OperatorNode.js";
 import { set } from "zod";
-const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
+const OrderItem = ({ index, item, updateItem, isOrder, isNew, setIsChange }) => {
   const doors = useSelector(state => state.doors.doors);
   const frames = useSelector(state => state.frames.frames);
   const dispatch = useDispatch();
@@ -60,25 +61,26 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
   const getOptions = (field) => {
     return possibleValues.find(v => v.key === field)?.values || []
   };
-const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
-const handleFileChange = (file) => {
-  if (!file) return;
-  setSelectedFile(file);
-setFile(file);
-  // שמירת הקובץ ב-state כדי לשלוח לשרת
-  // setOrderDetails(prev => ({
-  //   ...prev,
-  //   doorDetails: { ...prev.doorDetails, TextFileForTheMachine: file }
-  // }));
-};
-const handleUploadFile = () => {
-  if (!orderDetails.doorDetails.TextFileForTheMachine) {
-    alert("אנא בחר קובץ לפני ההעלאה.");
-    return;
-  }
-  dispatch(uploadDoorMachineFile({ doorId: item.itemId, file: orderDetails.doorDetails.TextFileForTheMachine }));
-};
+  const handleFileChange = (file) => {
+    if (!file) return;
+    setSelectedFile(file);
+    setFile(file);
+    // שמירת הקובץ ב-state כדי לשלוח לשרת
+    // setOrderDetails(prev => ({
+    //   ...prev,
+    //   doorDetails: { ...prev.doorDetails, TextFileForTheMachine: file }
+    // }));
+  };
+  const handleUploadFile = () => {
+    if (!orderDetails.doorDetails.TextFileForTheMachine) {
+      alert("אנא בחר קובץ לפני ההעלאה.");
+      return;
+    }
+    if (isOrder) setIsChange(true)
+    dispatch(uploadDoorMachineFile({ doorId: item.itemId, file: orderDetails.doorDetails.TextFileForTheMachine }));
+  };
 
   // useEffect לאתחול פריט מה-props
   useEffect(() => {
@@ -130,6 +132,8 @@ const handleUploadFile = () => {
 
     setOrderDetails(updated);
     updateItem(index, updated);
+    if (isOrder) setIsChange(true)
+
   };
   const updateItemNotInOrder = () => {
     orderDetails.itemType == "1" ? dispatch(updateTheDoor({ id: item.itemId, ...orderDetails.doorDetails })) : dispatch(updateTheFrame({ id: item.itemId, ...orderDetails.frameDetails }));
@@ -146,10 +150,13 @@ const handleUploadFile = () => {
     console.log("updated", updated);
 
     setOrderDetails(updated);
-    if (isOrder)
+    if (isOrder) {
       updateItem(index, updated);
+      setIsChange(true)
+    }
   };
   const addItem = () => {
+      if(isOrder)setIsChange(true)
     if (orderDetails.itemType == "1")
       if (file)
         dispatch(createDoorWithFile({ doorDetails: orderDetails.doorDetails, file }))
@@ -273,6 +280,7 @@ const handleUploadFile = () => {
             onChange={handleDoorFrameChange}
           />
         </div>)}
+      {isOrder && !isNew && <button onClick={() => dispatch(deleteItemFromOrder({ id: item.id, orderId: item.orderId, itemType: parseInt(item.itemType), itemId: item.itemId, quantity: item.quantity }))}>מחק פריט</button>}
       {isNew && <button onClick={() => { orderDetails.itemType == "1" ? addItem(orderDetails.doorDetails) : addItem(orderDetails.frameDetails) }}>הוסף פריט</button>}
       {!isOrder && !isNew && <button onClick={() => updateItemNotInOrder(index, orderDetails)}>עדכן פריט</button>}
     </div>

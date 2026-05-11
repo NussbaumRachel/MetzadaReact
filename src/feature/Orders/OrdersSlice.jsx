@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { addOrder, getOrders ,updateOrder} from "../../Api/OrdersApi";
+import { addOrder, deleteOrderItem, getOrders ,updateOrder} from "../../Api/OrdersApi";
 import { createFrame } from "../Frames/FramesSlice"
 import axios from "axios";
 
 import { createDoor } from "../Doors/DoorsSlice"
+import { date } from "zod";
 // יצירת פעולה אסינכרונית להוספת הזמנה
 export const createOrder = createAsyncThunk("orders/addOrder", addOrder);
 export const getAllOrders = createAsyncThunk("orders/getOrders", getOrders)
 export const updateTheOrder = createAsyncThunk("orders/updateOrder", updateOrder)
-
+export const deleteItemFromOrder = createAsyncThunk("orders/deleteOrderItem", deleteOrderItem)
 
 // מצב התחלתי של הסטייט
 const initialState = {
@@ -33,10 +34,11 @@ export const addNewOrderAsync = createAsyncThunk(
       price: 456789,
       notes: "jokoj",
       status: "פתוחה",
-      orderItems: []
+      orderItems: [],
+      orderDate: order.existingOrder?.orderDate || new Date().toISOString(),
+      updateDate: isChange || !order.existingOrder? new Date().toISOString() : order.existingOrder.updateDate 
     };
-console.log("vbnmvbn");
-
+    const isChange = order?.existingOrder?.isChange
     for (let i = 0; i < order.orderItems.length; i++) {
       if (order.orderItems[i].itemType === 1 ||order.orderItems[i].itemType === "1") {
         
@@ -116,6 +118,20 @@ const ordersSlice = createSlice({
         state.status = "failed"; // עדכון הסטטוס ל-"failed"
         state.error = action.error.message; // שמירת השגיאה במצב
       })
+      .addCase(deleteItemFromOrder.pending, (state) => {
+        state.status = "loading"; // עדכון הסטטוס ל-"loading"
+      })
+      // כאשר הבקשה הושלמה בהצלחה
+      .addCase(deleteItemFromOrder.fulfilled, (state, action) => {
+        state.status = "succeeded"; // עדכון הסטטוס ל-"succeeded"
+        state.orders = state.orders.filter(item => item.orderItems.filter(orderItem => orderItem.id !== action.payload.id));
+      })
+      // כאשר הבקשה נכשלה
+      .addCase(deleteItemFromOrder.rejected, (state, action) => {
+        state.status = "failed"; // עדכון הסטטוס ל-"failed"
+        state.error = action.error.message; // שמירת השגיאה במצב
+      })
+
   }
 
 });
