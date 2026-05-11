@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from "react"
+import ExportOrdersExcel from "./ExportOrdersExcel";
 import * as XLSX from "xlsx";
 import axios from 'axios'
 import AddOrder from "./addOrder";
@@ -11,6 +12,7 @@ import { getAllFrames } from "../Frames/FramesSlice";
 import { checkAllLimits } from "../PossibleValues/PossibleValuesSlice";
 import { getAllCustomers } from "../Customers/CustomerSlice"
 import OrderDetails from "./OrderDetails";
+import GenerateDoor from "./GenerateDoor";
 import { useNavigate } from "react-router-dom";
 function AllOrders() {   
     const navigate = useNavigate();
@@ -188,10 +190,8 @@ const s2ab = (s) => {
                 </div>
                 <div className="orders-actions">
                     <button className="btn-primary" onClick={() => setActive("הזמנה חדשה")}>הזמנה חדשה</button>
-                    <button className="btn-secondary" onClick={exportToExcel}>ייצוא לאקסל</button>
-                    <button className="btn-secondary" onClick={displayOrdersInExcel}>
-    הצג את פרטי ההזמנות בקובץ Excel
-</button>
+                   <ExportOrdersExcel />
+                   <GenerateDoor />
                 </div>
             </div>
             <div className="orders-filters">
