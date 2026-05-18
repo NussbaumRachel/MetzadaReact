@@ -280,7 +280,7 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew, setIsChange }) => 
             onChange={handleDoorFrameChange}
           />
         </div>)}
-      {isOrder && !isNew && <button onClick={() => dispatch(deleteItemFromOrder({ id: item.id, orderId: item.orderId, itemType: parseInt(item.itemType), itemId: item.itemId, quantity: item.quantity }))}>מחק פריט</button>}
+      {isOrder && !isNew && <button onClick={() => dispatch(deleteItemFromOrder({ id: item.id, orderId: item.orderId, itemType: parseInt(item.itemType), itemId: item.itemId, quantity: item.quantity,status:item.status,OrderItemDate:item.OrderItemDate, updateDate:item.updateDate}))}>מחק פריט</button>}
       {isNew && <button onClick={() => { orderDetails.itemType == "1" ? addItem(orderDetails.doorDetails) : addItem(orderDetails.frameDetails) }}>הוסף פריט</button>}
       {!isOrder && !isNew && <button onClick={() => updateItemNotInOrder(index, orderDetails)}>עדכן פריט</button>}
     </div>

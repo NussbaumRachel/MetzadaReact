@@ -5,6 +5,7 @@ import axios from "axios";
 
 import { createDoor } from "../Doors/DoorsSlice"
 import { date } from "zod";
+import { log } from "three/src/utils.js";
 // יצירת פעולה אסינכרונית להוספת הזמנה
 export const createOrder = createAsyncThunk("orders/addOrder", addOrder);
 export const getAllOrders = createAsyncThunk("orders/getOrders", getOrders)
@@ -21,7 +22,9 @@ const initialState = {
 export const addNewOrderAsync = createAsyncThunk(
   "orders/addNewOrderAsync",
   async (order,{ dispatch }) => {
-    const newOrder = {
+const isChange = order?.isChange
+
+  const newOrder = {
       id: order.existingOrder?.id || 0,
       custId: order.custId,
       custName: order.custName,
@@ -32,32 +35,31 @@ export const addNewOrderAsync = createAsyncThunk(
       floor: 4,
       apartmentNum: 20,
       price: 456789,
-      notes: "jokoj",
-      status: "פתוחה",
+      notes: "",
+      status: "",
       orderItems: [],
       orderDate: order.existingOrder?.orderDate || new Date().toISOString(),
       updateDate: isChange || !order.existingOrder? new Date().toISOString() : order.existingOrder.updateDate 
     };
-    const isChange = order?.existingOrder?.isChange
+
     for (let i = 0; i < order.orderItems.length; i++) {
       if (order.orderItems[i].itemType === 1 ||order.orderItems[i].itemType === "1") {
         
         let id = await dispatch(createDoor(order.orderItems[i].doorDetails));
-        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "1", itemId: id.payload, quantity: order.orderItems[i].quantity });
+        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "1", itemId: id.payload, quantity: order.orderItems[i].quantity ,status:order.orderItems[i].status || 'opening',orderItemDate:order.orderItems[i].orderItemDate || new Date().toISOString(),updateDate: new Date().toISOString()});
       }
-       else if (order.orderItems[i].itemType === 2 || order.orderItems[i].itemType === "2") {
+        else if (order.orderItems[i].itemType === 2 || order.orderItems[i].itemType === "2") {
         
         let id = await dispatch(createFrame(order.orderItems[i].frameDetails));
-        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "2", itemId: id.payload, quantity: order.orderItems[i].quantity });
+        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "2", itemId: id.payload, quantity: order.orderItems[i].quantity,status:order.orderItems[i].status || 'opening',orderItemDate:order.orderItems[i].orderItemDate || new Date().toISOString(),updateDate: new Date().toISOString() });
       }
     }
     console.log(newOrder, "before adding order");
     console.log("order.existingOrder",order.existingOrder);
-    
-   if(order.existingOrder==null)
-     await dispatch(createOrder(newOrder))
-    else 
-  await dispatch(updateOrder(newOrder))
+      if(order.existingOrder==null)
+      {await dispatch(createOrder(newOrder))}
+    else {
+      await dispatch(updateOrder(newOrder))}
   }
 );
 
@@ -66,7 +68,7 @@ const ordersSlice = createSlice({
   name: "orders", // שם הסלייס
   initialState,   // מצב התחלתי
   reducers: {
-   
+   // כאן ניתן להוסיף רידוסרים נוספים אם יש צורך
   },
   extraReducers: (builder) => {
     builder
