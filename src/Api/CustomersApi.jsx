@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { authHeaders } from './EmployeesApi';
 const fetchWithRetry = async (fn, retries = 3, delay = 500) => {
   try {
     return await fn();
@@ -12,8 +13,10 @@ export const addCustomer = async (newCustomer) => {
     // try {
       // שליחת בקשה ל-API להוסיף הזמנה חדשה
      return fetchWithRetry(() =>
- axios.post("https://localhost:7253/api/Customer/Add", newCustomer)      // מחזירים את התגובה מהשרת
-      .then(res => res.data))
+ axios.post("https://localhost:7253/api/Customer/Add", newCustomer, {
+    authHeaders
+ })      // מחזירים את התגובה מהשרת
+   .then(res => res.data))
 
     // } catch (error) {
       // טיפול בשגיאות והחזרת שגיאה מתאימה אם קרתה בעיה

@@ -4,6 +4,7 @@ import orderReducer from '../feature/Orders/OrdersSlice'
 import frameReducer from '../feature/Frames/FramesSlice'
 import possibleValuesReducer from '../feature/PossibleValues/PossibleValuesSlice'
 import customersReducer from '../feature/Customers/CustomerSlice'
+import employeesReducer from '../feature/Employees/EmployeeSlice'
 export const store = configureStore({
 
 reducer:{
@@ -11,7 +12,8 @@ orders:orderReducer,
 doors:doorsReducer,
 frames:frameReducer,
 possibleValues:possibleValuesReducer,
-customers:customersReducer
+customers:customersReducer,
+employees:employeesReducer
 }
 }
 );

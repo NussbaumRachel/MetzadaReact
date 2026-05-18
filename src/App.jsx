@@ -11,10 +11,13 @@ import LoginDoor from "./feature/Login/LoginDoor";
 import CustomerForm from "./feature/Customers/CustomerForm";
 import Manager from "./feature/Manager/Manager";
 import OrderDetails from "./feature/Orders/OrderDetails";
+import AllEmployees from "./feature/Employees/AllEmployees";
+import { useSelector } from "react-redux";
 
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const userRole = useSelector(state => state.employees.user?.role); // נניח שיש לנו תפקיד משתמש
   return (
       <div className="App">
      
@@ -30,9 +33,10 @@ export default function App() {
               <Route path="/frames" element={<AllFrames />} />
               <Route path="/customers" element={<AllCustomers />} />
               <Route path="/add-customer" element={<CustomerForm />} />
-              <Route path="/manager" element={<Manager />} />
+              <Route path="/manager" element={<Manager />} roles={["Manager"]} userRole={userRole} />
               <Route path="*" element={<Navigate to="/" replace />} />
               <Route path="/order-details/:orderId" element={<OrderDetails />} />
+              <Route path="/employees" element={<AllEmployees />} />
             </Routes>
           </>
         )}

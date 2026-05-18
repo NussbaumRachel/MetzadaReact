@@ -13,14 +13,17 @@ import { checkAllLimits } from "../PossibleValues/PossibleValuesSlice";
 import { getAllCustomers } from "../Customers/CustomerSlice"
 import OrderDetails from "./OrderDetails";
 import { useNavigate } from "react-router-dom";
-function AllOrders() {   
+import { getAllEmployees } from "../Employees/EmployeeSlice";
+function AllOrders() {
     const navigate = useNavigate();
     const customers = useSelector(state => state.customers.customers)
     const orders = useSelector(state => state.orders.orders)
     const statusO = useSelector(state => state.orders.status)
     const statusD = useSelector(state => state.doors.status)
     const statusL = useSelector(state => state.possibleValues.status)
+    const statusC = useSelector(state => state.customers.status)
     const statusF = useSelector(state => state.frames.status)
+    const statusE = useSelector(state => state.employees.status)
     const [active, setActive] = useState("הזמנות");
     const [filter, setFilter] = useState("הכול");
     const menuItems = ["הזמנות", "דלתות", "משקופים", "לקוחות"];
@@ -47,6 +50,7 @@ function AllOrders() {
             await dis(getAllOrders());
             await dis(getAllFrames());
             await dis(getAllCustomers())
+            await dis(getAllEmployees())
         };
 
         load();
@@ -57,15 +61,18 @@ function AllOrders() {
             statusO === "succeeded" &&
             statusD === "succeeded" &&
             statusL === "succeeded" &&
-            statusF === "succeeded"
+            statusF === "succeeded" &&
+            statusC === "succeeded" &&
+            statusE === "succeeded"
+
         ) {
             setLoading(false);
         }
-    }, [statusO, statusD, statusL, statusF]);
+    }, [statusO, statusD, statusL, statusF,statusC,statusE]);
     const openDetails = (order) => {
         setSelectedOrder(order);
         navigate(`/order-details/${order.id}`);
-       
+
     };
 
     /**
@@ -76,7 +83,7 @@ function AllOrders() {
         setIsEditOpen(true);
     };
     const getContactName = (custId) => {
- 
+
         const customer = customers.find(c => c.id === custId);
         return customer ? customer.contactPersonName : "לא נמצא";
     }
@@ -89,13 +96,13 @@ function AllOrders() {
             <div className="orders-header">
                 <div className="orders-title-block">
                     <h1 className="orders-title">הזמנות</h1>
-                    
+
                     <p className="orders-subtitle"> ניהול מרכזי של כל הזמנות המפעל – סטטוס ייצור, לקוחות, כמויות ותאריכי אספקה. </p>
                 </div>
                 <div className="orders-actions">
                     <button className="btn-primary" onClick={() => setActive("הזמנה חדשה")}>הזמנה חדשה</button>
-                   <ExportOrdersExcel />
-                   
+                    <ExportOrdersExcel />
+
                 </div>
             </div>
             <div className="orders-filters">
@@ -134,7 +141,7 @@ function AllOrders() {
                                     <button className="action-btn" onClick={() => openEdit(order)}>עריכה</button> </div> </td></tr>))} </tbody> </table> </div> </main>
         {active === "הזמנה חדשה" ? (
             <Modal isOpen={true} onClose={() => setActive("הזמנות")}>
-            <AddOrder />
+                <AddOrder />
             </Modal>
         ) : (
             <div>
