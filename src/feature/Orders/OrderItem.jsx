@@ -38,6 +38,7 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew, setIsChange }) => 
       internalLayoutLength: 0,
       externalLayoutWidth: 0,
       externalLayoutLength: 0,
+      price: 0,
     },
     frameDetails: {
       side: "",
@@ -52,9 +53,10 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew, setIsChange }) => 
       profile: "",
       perforation: "",
       color: "",
+      price: 0,
     },
-    quantity: 1
-    
+    quantity: 1,
+    price: 0,
   });
   const doorsFields = useSelector(state => state.doors.doorsFields);
   const framesFields = useSelector(state => state.frames.framesFields);

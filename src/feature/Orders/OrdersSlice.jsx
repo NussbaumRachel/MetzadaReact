@@ -34,7 +34,7 @@ const isChange = order?.isChange
       buildingNum: order.buildingNum,
       floor: order.floor,
       apartmentNum: order.apartmentNum,
-      price: order.price,
+      price: order.price || 0,
       notes: order.notes,
       status: order.status,
       orderItems: [],

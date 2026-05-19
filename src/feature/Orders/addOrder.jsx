@@ -85,6 +85,7 @@ const AddOrder = ({ existingOrder }) => {
         apartmentNum: existingOrder.apartmentNum || "",
         price: existingOrder.price || "",
         notes: existingOrder.notes || "",
+        status: existingOrder.status || "opening",
         orderItems: [],
         orderDate: existingOrder.orderDate || new Date().toISOString(),
         updateDate: new Date().toISOString(),
@@ -217,12 +218,27 @@ const AddOrder = ({ existingOrder }) => {
               />
             </div>
           ))}
+          <div className="form-group full">
+          <label>מחיר כולל</label>
+          <input type="number" name="price" value={order.price} onChange={handleInputChange} />
+        </div>
+        {/* כאן יהיה אינפוט מסוג סלקט של סטטוס ההזמנה */}
+        <div className="form-group">
+          <label>סטטוס הזמנה</label>
+          <select name="status" value={order.status} onChange={handleInputChange}>
+            <option value="opening">פתוחה</option>
+            <option value="closed">סגורה</option>
+            <option value="in_progress">בתהליך</option>
+            <option value="completed">הושלמה</option>
+          </select>
+        </div>
         </div>
 
         <div className="form-group full">
           <label>הערות</label>
           <textarea name="notes" value={order.notes} onChange={handleInputChange} />
         </div>
+        
         <div>
           {order.orderItems.map((item, index) => (
             <div key={index} onClick={() => toggleItem(index)} className="item-summary" style={{ cursor: "pointer" }}>

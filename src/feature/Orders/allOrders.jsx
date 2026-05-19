@@ -36,20 +36,21 @@ function AllOrders() {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const role = useSelector(state => state.employees.user?.role);
-    // const filteredOrders = filter === "הכול" ? orders : orders.filter((o) => o.status === filter);
-    const filteredOrders = orders
-    .filter(order => role === "measurer" ? order.status === "פתוחה" : true)
-    .filter(order => filter === "הכול" ? true : order.status === filter)
-    .filter(order => order.custName.toLowerCase().includes(customerSearch.toLowerCase()));
+    const filteredOrders = filter === "הכול" ? orders : orders.filter((o) => o.status === filter);
+    // const filteredOrders = orders
+    // .filter(order => role === "measurer" ? order.status === "opening" : true)
+    // .filter(order => filter === "הכול" ? true : order.status === filter)
+    // .filter(order => order.custName.toLowerCase().includes(customerSearch.toLowerCase()));
     const userRole = useSelector(state => state.employees.user?.role);
-
     const renderStatusPill = (status) => {
-        if (status === "פתוחה") {
+        if (status === "opening") {
             return (
                 <span className="status-pill status-open"> <span className="status-dot" /> פתוחה </span>);
         }
-        if (status === "בתהליך") { return (<span className="status-pill status-in-progress"> <span className="status-dot" /> בתהליך ייצור </span>); }
-        return (<span className="status-pill status-done"> <span className="status-dot" /> הושלמה </span>);
+        if (status === "in-progress") { return (<span className="status-pill status-in-progress"> <span className="status-dot" /> בתהליך ייצור </span>); }
+        if (status === "completed") { return (<span className="status-pill status-done"> <span className="status-dot" /> הושלמה </span>); }
+
+        return (<span className="status-pill status-closed"> <span className="status-dot" /> סגורה </span>);
     };
     const dis = useDispatch()
     const [loading, setLoading] = useState(true);
@@ -125,7 +126,7 @@ function AllOrders() {
             </div> */}
             <div className="orders-filters">
                 <span>סינון לפי סטטוס:</span>
-                {["הכול", "פתוחה", "בתהליך", "הושלמה"].map((f) => (
+                {["הכול", "opening", "in-progress", "completed"].map((f) => (
                     <button key={f} className={`filter-pill ${filter === f ? "active" : ""}`} onClick={() => setFilter(f)} > {f} </button>))}
             </div>
             <div className="orders-table-wrapper">
