@@ -70,12 +70,21 @@ export default function Employee({ employee, onClose, onSave }) {
                             value={form.password || ""}
                             onChange={handleChange}
                         />
-                        <input
+                        <select
+                            name="role"
+                            value={form.status || "עובד"} // ברירת מחדל לתפקיד "עובד"
+                            onChange={handleChange}
+                        >
+                            <option value="Employee">עובד</option>
+                            <option value="Manager">מנהל</option>
+                            <option value="Measurer">מודד</option>
+                        </select>
+                        {/* <input
                             name="status"
                             placeholder="סטטוס"
                             value={form.status || ""}
                             onChange={handleChange}
-                        />
+                        /> */}
                         <input
                             name="phone1"
                             placeholder="טלפון 1"

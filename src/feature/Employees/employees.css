@@ -223,7 +223,8 @@
     gap: 18px;
 }
 
-.employee-grid input {
+.employee-grid input,
+.employee-grid select {
     padding: 14px;
     border-radius: 14px;
     border: 1px solid rgba(245,210,106,0.12);
@@ -233,7 +234,7 @@
     transition: 0.3s;
 }
 
-.employee-grid input:focus {
+.employee-grid input:focus , .employee-grid select:focus {
     border-color: #f5d26a;
     box-shadow: 0 0 18px rgba(245,210,106,0.18);
     transform: translateY(-1px);

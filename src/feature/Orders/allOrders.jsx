@@ -27,11 +27,21 @@ function AllOrders() {
     const [active, setActive] = useState("הזמנות");
     const [filter, setFilter] = useState("הכול");
     const menuItems = ["הזמנות", "דלתות", "משקופים", "לקוחות"];
+    const [customerSearch, setCustomerSearch] = useState("");
+//     const filteredByCustomer = filteredOrders.filter(order =>
+//     order.custName.toLowerCase().includes(customerSearch.toLowerCase())
+// );
     // הוסף ל-state
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
-    const filteredOrders = filter === "הכול" ? orders : orders.filter((o) => o.status === filter);
+    const role = useSelector(state => state.employees.user?.role);
+    // const filteredOrders = filter === "הכול" ? orders : orders.filter((o) => o.status === filter);
+    const filteredOrders = orders
+    .filter(order => role === "measurer" ? order.status === "פתוחה" : true)
+    .filter(order => filter === "הכול" ? true : order.status === filter)
+    .filter(order => order.custName.toLowerCase().includes(customerSearch.toLowerCase()));
+    const userRole = useSelector(state => state.employees.user?.role);
 
     const renderStatusPill = (status) => {
         if (status === "פתוחה") {
@@ -68,7 +78,7 @@ function AllOrders() {
         ) {
             setLoading(false);
         }
-    }, [statusO, statusD, statusL, statusF,statusC,statusE]);
+    }, [statusO, statusD, statusL, statusF, statusC, statusE]);
     const openDetails = (order) => {
         setSelectedOrder(order);
         navigate(`/order-details/${order.id}`);
@@ -102,9 +112,17 @@ function AllOrders() {
                 <div className="orders-actions">
                     <button className="btn-primary" onClick={() => setActive("הזמנה חדשה")}>הזמנה חדשה</button>
                     <ExportOrdersExcel />
-
                 </div>
             </div>
+            {/* <div className="customer-search">
+                <label>חיפוש לפי לקוח:</label>
+                <input
+                    type="text"
+                    value={customerSearch}
+                    onChange={(e) => setCustomerSearch(e.target.value)}
+                    placeholder="הקלד שם לקוח"
+                />
+            </div> */}
             <div className="orders-filters">
                 <span>סינון לפי סטטוס:</span>
                 {["הכול", "פתוחה", "בתהליך", "הושלמה"].map((f) => (

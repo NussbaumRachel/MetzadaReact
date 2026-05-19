@@ -9,7 +9,8 @@ export default function Header() {
     { path: "/frames", label: "משקופים" },
     { path: "/customers", label: "לקוחות" },
     { path: "/manager", label: "ניהול " },
-    { path: "/employees", label: " עובדים" }
+    { path: "/employees", label: " עובדים" },
+    { path: "/measurer", label: "מודד" }
   ];
 
   return (
