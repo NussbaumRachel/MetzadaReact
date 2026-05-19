@@ -3,9 +3,9 @@ import "./Customers.css";
 import CustomerForm from "./CustomerForm";
 import Modal from "../Modals/Modal";
 // import { customersMock, ordersMock } from "./mockData";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
-
+import {deleteCustomerById} from "../../Api/CustomersApi";
 
 // const orders = ordersMock;
 
@@ -18,7 +18,7 @@ const customers = useSelector(state => state.customers.customers) || [];
   const [openOrdersFor, setOpenOrdersFor] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const getCustomerOrders = (id) =>
     orders.filter(o => o.custId === id);
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const customers = useSelector(state => state.customers.customers) || [];
         ...c,
         totalOrders: custOrders.length,
         isActive: custOrders.length > 0,
-        totalRevenue: custOrders.reduce((a, b) => a + (b.price || 0), 0)
+        totalRevenue: custOrders.reduce((a, b) => parseInt(a) + parseInt(b.price || 0), 0)
       };
     });
   }, []);
@@ -53,8 +53,14 @@ const customers = useSelector(state => state.customers.customers) || [];
     });
   }, [search, filter, enrichedCustomers]);
 
-  const handleDelete = (id) => {
-    alert("מחיקה " + id);
+  const handleDelete = async (id) => {
+  
+      // כאן ניתן להוסיף את הלוגיקה למחיקת הלקוח
+        await deleteCustomerById(id);
+        setIsDeleteOpen(false);
+        setSelectedCustomer(null);
+        //setFilteredCustomers(filteredCustomers.filter(c => c.id !== id));
+
   };
 
   return (
@@ -164,7 +170,7 @@ const customers = useSelector(state => state.customers.customers) || [];
                   ✏️ עריכה
                 </button>
 
-                <button onClick={() => handleDelete(c.id)}>
+                <button onClick={() => { setIsDeleteOpen(true); setSelectedCustomer(c); }}>
                   🗑 מחיקה
                 </button>
               </div>
@@ -268,7 +274,18 @@ const customers = useSelector(state => state.customers.customers) || [];
           }}
         />
       </Modal>
-
+      <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
+                <div className="modal-header">
+                    <h2>מחיקת לקוח</h2>
+                </div>
+                <div className="modal-body">
+                    <p>האם אתה בטוח שברצונך למחוק את לקוח '{selectedCustomer?.name}'?</p>
+                </div>
+                <div className="modal-footer">
+                    <button className="btn-secondary" onClick={() => setIsDeleteOpen(false)}>ביטול</button>
+                    <button className="btn-danger" onClick={() => handleDelete(selectedCustomer.id)}>מחק</button>
+                </div>
+            </Modal>
     </div>
   );
 }

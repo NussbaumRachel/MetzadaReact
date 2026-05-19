@@ -33,7 +33,7 @@ export const loginUser = async (credentials) => {
 export const addEmployee = async (newEmployee) => {
     // try {
       // שליחת בקשה ל-API להוסיף הזמנה חדשה
-     return fetchWithRetry(() =>
+      return fetchWithRetry(() =>
  axios.post("https://localhost:7253/api/Employees/Add", newEmployee)      // מחזירים את התגובה מהשרת
       .then(res => res.data))
 
@@ -45,8 +45,8 @@ export const addEmployee = async (newEmployee) => {
   export const getEmployees = async () => {
     // try {
       // שליחת בקשה ל-API להוסיף הזמנה חדשה
-       return fetchWithRetry(() =>
-       axios.get("https://localhost:7253/api/Employees/GetAll")
+        return fetchWithRetry(() =>
+        axios.get("https://localhost:7253/api/Employees/GetAll")
       // מחזירים את התגובה מהשרת
       .then(res => res.data))
     // } catch (error) {
@@ -56,11 +56,12 @@ export const addEmployee = async (newEmployee) => {
   }
   export const deleteEmployeeById = async (id) => {
 
-       return fetchWithRetry(() =>
-         axios.delete(`https://localhost:7253/api/Employees/Delete?id=${id}`)
-           .then(res => res.data)
-   );   }
-   export const putEmployee = async (Employee) => {
+        return fetchWithRetry(() =>
+          axios.delete(`https://localhost:7253/api/Employees/Delete?id=${id}`)
+            .then(res => res.data)
+    );
+    }
+    export const putEmployee = async (Employee) => {
 
     return fetchWithRetry(() =>
       axios.put(`https://localhost:7253/api/Employees/Update`, Employee)

@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import { createCustomer, updateCustomer } from "./CustomerSlice";
-import { no } from "zod/v4/locales";
+import { de, no } from "zod/v4/locales";
 export default function CustomerForm({ existing, onSave }) {
 const location = useLocation();
 const dispatch = useDispatch();
@@ -22,14 +22,15 @@ const defaultName = location.state?.name || "";
     notes: ""
   });
 const addCustomer = (form) => {
- const newCustomer = {
-   ...form,
+  const newCustomer = {
+  ...form,
    id: form.id ? form.id : (Date.now() % 1000000000).toString(), // יצירת ID ייחודי אם אין ID קיים, מבצע מודולו כדי לקבל מספר באורך 9 תווים
-   notes: form.notes || "",
- };
- !form.id ? dispatch(createCustomer(newCustomer)) : dispatch(updateCustomer(newCustomer));
+  notes: form.notes || "",
+  };
+  debugger;
+  !form.id ? dispatch(createCustomer(newCustomer)) : dispatch(updateCustomer(newCustomer));
 
-  // onSave(false);
+  onSave(false);
 };
 
   useEffect(()=>{

@@ -135,8 +135,8 @@ function AllOrders() {
                                 <td>{order.updateDate}</td>
                                 <td>{order.deliveryDate}</td>
                                 <td>{renderStatusPill(order.status)}</td>
-                                <td>{order.notes}</td>
                                 <td>{getContactName(order.custId)}</td>
+                                <td>{order.notes}</td>
                                 <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(order)}>פרטים</button>
                                     <button className="action-btn" onClick={() => openEdit(order)}>עריכה</button> </div> </td></tr>))} </tbody> </table> </div> </main>
         {active === "הזמנה חדשה" ? (

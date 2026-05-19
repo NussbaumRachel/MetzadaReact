@@ -2,11 +2,11 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function GenerateDoor({ door, onClose }) {
-   
+
     
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState(null);
- if (!door) {
+    if (!door) {
         return <div>אין דלת נבחרת</div>;
     }
     const generateImage = async () => {

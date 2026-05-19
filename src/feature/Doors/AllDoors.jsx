@@ -53,6 +53,7 @@ const [isOpen, setIsOpen] = useState(false);
                         <tr>
                             <th>ID</th>
                             <th>סוג דלת</th>
+                            <th>מחיר</th>
                             <th>רוחב</th>
                             <th>גובה</th>
                             <th>פעולות</th>
@@ -63,6 +64,7 @@ const [isOpen, setIsOpen] = useState(false);
                             <tr key={d.id}>
                                 <td>{d.id}</td>
                                 <td>{d.type}</td>
+                                <td>{d.price}</td>
                                 <td>{d.width}</td>
                                 <td>{d.height}</td>
                                 <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(d)}>פרטים</button>
@@ -98,10 +100,10 @@ const [isOpen, setIsOpen] = useState(false);
             </Modal>
             <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
                 <div className="modal-header">
-                    <h2>מחיקת הזמנה</h2>
+                    <h2>מחיקת דלת</h2>
                 </div>
                 <div className="modal-body">
-                    <p>האם אתה בטוח שברצונך למחוק את ההזמנה?</p>
+                    <p>האם אתה בטוח שברצונך למחוק את הדלת?</p>
                 </div>
                 <div className="modal-footer">
                     <button className="btn-secondary" onClick={() => setIsDeleteOpen(false)}>ביטול</button>
