@@ -10,22 +10,22 @@ export const deleteDoor = createAsyncThunk("doors/deleteDoor", deleteDoorById);
 export const updateTheDoor = createAsyncThunk("doors/updateDoor", updateDoor);
 
 export const createDoorWithFile = createAsyncThunk(
-  "doors/createDoorWithFile",
-  async ({ doorDetails, file }, thunkAPI) => {
+    "doors/createDoorWithFile",
+    async ({ doorDetails, file }, thunkAPI) => {
     try {
       const newDoorId = await addDoor(doorDetails); // יצירת דלת
-      if (file) {
+        if (file) {
         await uploadDoorFile(newDoorId, file); // העלאת קובץ
-      }
-      return { ...doorDetails, id: newDoorId };
+        }
+        return { ...doorDetails, id: newDoorId };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+        return thunkAPI.rejectWithValue(error.message);
     }
-  }
+    }
 );
 export const uploadDoorMachineFile = createAsyncThunk(
-  "doors/uploadDoorFile",
-     uploadDoorFile
+    "doors/uploadDoorFile",
+        uploadDoorFile
 );
 // מצב התחלתי של הסטייט
 const initialState = {
@@ -51,6 +51,7 @@ const initialState = {
     { field: "internalLayoutLength", hebrow: "גובה פרופיל פנימי", type: "number" },
     { field: "externalLayoutWidth", hebrow: "רוחב פרופיל חיצוני", type: "number" },
     { field: "externalLayoutLength", hebrow: "גובה פרופיל חיצוני", type: "number" },
+    { field: "price", hebrow: "מחיר", type: "number" }
     ]
 }
 

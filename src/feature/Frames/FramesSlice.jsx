@@ -26,7 +26,9 @@ const initialState = {
     { field: "framesHeightWithShutter", hebrow: "גובה משקוף עם תריס", type: "number" },
     { field: "profile", hebrow: "פרופיל", type: "text" },
     { field: "perforation", hebrow: "ניקוב", type: "text" },
-    { field: "color", hebrow: "צבע", type: "text" }]
+    { field: "color", hebrow: "צבע", type: "text" },
+    { field: "price", hebrow: "מחיר", type: "number" },
+        ]
 };
 
 // יצירת הסלייס לניהול הזמנות

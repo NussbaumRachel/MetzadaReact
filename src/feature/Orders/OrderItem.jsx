@@ -54,6 +54,7 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew, setIsChange }) => 
       color: "",
     },
     quantity: 1
+    
   });
   const doorsFields = useSelector(state => state.doors.doorsFields);
   const framesFields = useSelector(state => state.frames.framesFields);

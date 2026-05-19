@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import OrderItemDetails from "./OrderItemDetails";
+import { de } from "zod/v4/locales";
 
 const OrderDetails = () => {
     const { orderId } = useParams();
     const orders = useSelector(s => s.orders.orders);
+    const doors = useSelector(s => s.doors.doors);
+    const doorsframes = useSelector(s => s.frames.frames);
     const [order, setOrder] = useState(null);
     const [expandedItems, setExpandedItems] = useState([]); // שמירה על פריטים פתוחים
 
-      const toggleItem = (itemId) => {
+        const toggleItem = (itemId) => {
         // אם הפריט פתוח, נסגור אותו
         setExpandedItems(prev => 
             prev.includes(itemId) 
@@ -17,7 +20,18 @@ const OrderDetails = () => {
                 : [...prev, itemId]               // נוסיף את המזהה של הפריט הנבחר
         );
     };
-
+    
+const calcPrice = (item) => {
+    debugger;
+    if(item.itemType === 1) {
+        const door = doors.find(d => d.id === item.itemId);
+        if (!door) return "--";
+        return parseFloat(door.price).toLocaleString("he-IL") * item.quantity;
+    }
+    const frame = doorsframes.find(f => f.id === item.itemId);
+    if (!frame) return "--";
+    return parseFloat(frame.price).toLocaleString("he-IL") * item.quantity;
+};
 
     useEffect(() => {
         setOrder(orders.find(o => o.id === +orderId));
@@ -40,7 +54,9 @@ const OrderDetails = () => {
                     <div><b>הערות:</b> {order.notes || "--"}</div>
                 </div>
             </div>
-           <div className="lux-items">
+            <div className="lux-items">
+            {console.log("order.orderItems",order.orderItems)}
+
     {order.orderItems.map((item, i) => (
         <div
             key={i}
@@ -55,7 +71,7 @@ const OrderDetails = () => {
             <div className="lux-grid">
                 <div className="lux-field">
                     <span className="lux-label">מחיר</span>
-                    <span className="lux-value">{item.price} ₪</span>
+                    <span className="lux-value">{calcPrice(item)} ₪</span>
                 </div>
 
                 <div className="lux-field">
