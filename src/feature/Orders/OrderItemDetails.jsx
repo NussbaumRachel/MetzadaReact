@@ -21,7 +21,6 @@ const OrderItemDetails = ({ item }) => {
             setItemDetails(item);
         }
     }, [item, doors, frames]);
-
     const fields = item.itemType === 1 ? doorFields : frameFields;
     return (
         <div className="lux-item-card">

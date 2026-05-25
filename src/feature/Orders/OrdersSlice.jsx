@@ -22,7 +22,6 @@ const initialState = {
 export const addNewOrderAsync = createAsyncThunk(
   "orders/addNewOrderAsync",
   async (order,{ dispatch }) => {
-const isChange = order?.isChange
 
   const newOrder = {
       id: order.existingOrder?.id || 0,
@@ -39,7 +38,7 @@ const isChange = order?.isChange
       status: order.status,
       orderItems: [],
       orderDate: order.existingOrder?.orderDate || new Date().toISOString(),
-      updateDate: isChange || !order.existingOrder? new Date().toISOString() : order.existingOrder.updateDate 
+      updateDate: new Date().toISOString() 
     };
 
     for (let i = 0; i < order.orderItems.length; i++) {

@@ -23,7 +23,6 @@ const AddOrder = ({ existingOrder }) => {
   const [search, setSearch] = useState("");
   const [filteredCustomers, setFilteredCustomers] = useState(custs);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isChange,setIsChange] = useState(false)
   useEffect(() => {
     if (!search) {
       setFilteredCustomers([]);
@@ -90,7 +89,6 @@ const AddOrder = ({ existingOrder }) => {
         orderDate: existingOrder.orderDate || new Date().toISOString(),
         updateDate: new Date().toISOString(),
         existingOrder: existingOrder,
-        isChange:isChange
       });
       log("order",order);
       extendsOrderItems(existingOrder.orderItems);
@@ -108,8 +106,7 @@ const AddOrder = ({ existingOrder }) => {
     return newOis
   }
   const handleInputChange = (e) => {
-    if(existingOrder)
-      {setIsChange(true)}
+    
     const { name, value } = e.target;
     setOrder(prev => ({
       ...prev,
@@ -251,7 +248,6 @@ const AddOrder = ({ existingOrder }) => {
                   updateItem={updateItem} 
                   isOrder={true}
                   isNew={false}
-                  setIsChange={setIsChange}
                 />
               {/* )} */}
             </div>
