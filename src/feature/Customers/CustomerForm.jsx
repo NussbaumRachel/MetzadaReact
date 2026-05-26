@@ -1,9 +1,9 @@
 // CustomerForm.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useLocation } from "react-router-dom";
 // import Modal from "../Modals/Modal";
 import {Modal} from "../Modals/modal.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createCustomer, updateCustomer } from "./CustomerSlice";
 import { de, fr, no } from "zod/v4/locales";
 export default function CustomerForm({ existing, onSave, defaultName = "" }) {
@@ -21,16 +21,20 @@ const [form, setForm] = useState({
     cn: "",
     notes: ""
   });
+  const employeeId = useSelector(state => state.employees.user.id);
 const addCustomer = (form) => {
+  
   const newCustomer = {
   ...form,
    id: form.id ? form.id : (Date.now() % 1000000000).toString(), // יצירת ID ייחודי אם אין ID קיים, מבצע מודולו כדי לקבל מספר באורך 9 תווים
   notes: form.notes || "",
+  createdAt: form.createdAt || new Date().toISOString(),
+  employeeId: form.employeeId || employeeId, 
   };
   debugger;
   !form.id ? dispatch(createCustomer(newCustomer)) : dispatch(updateCustomer(newCustomer));
 
-  onSave(newCustomer); // כאן שולחים את הלקוח החדש, לא false??????????????????????????????????????????
+  onSave(newCustomer); // כאן שולחים את הלקוח החדש, לא false
 };
 
   useEffect(()=>{

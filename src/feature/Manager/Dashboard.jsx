@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart,
   Bar,
@@ -49,17 +50,37 @@ export default function Dashboard() {
     return best;
   }, [customers, orders]);
 
+  // const monthlyData = useMemo(() => {
+  //   const map = {};
+  //   orders.forEach((o) => {
+  //     const m = o.month || "לא ידוע";
+  //     map[m] = (map[m] || 0) + (o.total || 0);
+  //   });
+
+  //   return Object.entries(map).map(([month, value]) => ({
+  //     month,
+  //     value,
+  //   }));
+  // }, [orders]);
   const monthlyData = useMemo(() => {
     const map = {};
+
     orders.forEach((o) => {
-      const m = o.month || "לא ידוע";
-      map[m] = (map[m] || 0) + (o.total || 0);
+      if (!o.createDate) return;
+
+      const date = new Date(o.createDate);
+
+      const key = `${date.getFullYear()}-${date.getMonth() + 1}`;
+
+      map[key] = (map[key] || 0) + (o.price || 0);
     });
 
-    return Object.entries(map).map(([month, value]) => ({
-      month,
-      value,
-    }));
+    return Object.entries(map)
+      .sort(([a], [b]) => new Date(a) - new Date(b))
+      .map(([month, value]) => ({
+        month,
+        value,
+      }));
   }, [orders]);
 
   const statusData = [
@@ -91,7 +112,53 @@ export default function Dashboard() {
       value,
     }));
   }, [doors]);
+  //חישוב הזמנות לפי ימי השבוע לשבוע הקרוב
+  const weekDeliveryData = useMemo(() => {
+    const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 
+    const startOfWeek = (date) => {
+      const d = new Date(date);
+      const day = d.getDay();
+      const diff = d.getDate() - day;
+      return new Date(d.setDate(diff));
+    };
+
+    const start = startOfWeek(new Date());
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+
+    const map = {
+      ראשון: [],
+      שני: [],
+      שלישי: [],
+      רביעי: [],
+      חמישי: [],
+      שישי: [],
+      שבת: [],
+    };
+
+    orders.forEach((o) => {
+      if (!o.deliveryDate) return;
+
+      const d = new Date(o.deliveryDate);
+      if (d < start || d > end) return;
+
+      const dayName = days[d.getDay()];
+      map[dayName].push(o.id);
+    });
+
+    return Object.entries(map).map(([day, ids]) => ({
+      day,
+      count: ids.length,
+      ids,
+    }));
+  }, [orders]);
+  function getColor(count) {
+    if (count === 0) return "rgba(148,163,184,0.2)";
+    if (count <= 2) return "linear-gradient(90deg,#22c55e,#16a34a)";
+    if (count <= 5) return "linear-gradient(90deg,#f59e0b,#f97316)";
+    return "linear-gradient(90deg,#ef4444,#b91c1c)";
+  }
   // חישוב צמיחת לקוחות לפי חודש מההזמנות בפועל
   const customersGrowth = useMemo(() => {
     const map = {};
@@ -107,7 +174,7 @@ export default function Dashboard() {
       y: set.size
     })).sort((a, b) => a.x.localeCompare(b.x));
   }, [orders]);
-
+  const navigate = useNavigate();
   // פילוח הכנסות לפי מחלקות עובדים
   const revenueByDepartment = useMemo(() => {
     const map = {};
@@ -203,7 +270,7 @@ export default function Dashboard() {
 
       {/* ================= SECOND ROW ================= */}
       <div style={styles.grid}>
-        
+
 
         <Box title="דלתות לפי סוג">
           <ResponsiveContainer width="100%" height={180}>
@@ -213,8 +280,55 @@ export default function Dashboard() {
             </BarChart>
           </ResponsiveContainer>
         </Box>
+        <Box title="עומס אספקות השבוע">
 
-        <Box title="שיעור הזמנות">
+  <div style={styles.verticalGraph}>
+
+    {weekDeliveryData.map((d) => (
+      <div key={d.day} style={styles.columnWrap}>
+
+        {/* העמודה */}
+        <div style={styles.columnBase}>
+
+          <div
+            style={{
+              ...styles.columnBar,
+              height: `${Math.min(d.count * 25, 140)}px`,
+              background: getColor(d.count),
+            }}
+          >
+
+            {/* IDs בתוך העמודה */}
+            <div style={styles.columnInside}>
+              {d.ids.slice(0, 2).map((id) => (
+                <span key={id} style={styles.idTag} onClick={() => navigate(`/order-details/${id}`)}>
+                  #{id}
+                </span>
+              ))}
+
+              {d.ids.length > 2 && (
+                <span style={styles.moreTag}>
+                  +{d.ids.length - 2}
+                </span>
+              )}
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* יום בתחתית */}
+        <div style={styles.dayBottom}>
+          {d.day}
+        </div>
+
+      </div>
+    ))}
+
+  </div>
+
+</Box>
+        {/* <Box title="שיעור הזמנות">
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
               <Pie data={statusData} dataKey="value" outerRadius={60} />
@@ -224,7 +338,7 @@ export default function Dashboard() {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
-        </Box>
+        </Box> */}
       </div>
 
       {/* ================= פילוחים חדשים ================= */}
@@ -305,7 +419,73 @@ const styles = {
     fontSize: 18,
     marginBottom: 10,
   },
+  verticalGraph: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "flex-end",
+  height: "220px",
+  gap: "30px",
+  padding: "10px 5px",
+  direction: "rtl"
+},
 
+columnWrap: {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "8px",
+  flex: 1
+},
+
+columnBase: {
+  width: "100%",
+  height: "160px",
+  display: "flex",
+  alignItems: "flex-end",
+  justifyContent: "center",
+  background: "rgba(255,255,255,0.03)",
+  borderRadius: "10px",
+  border: "1px solid rgba(245,210,106,0.08)",
+  position: "relative",
+  overflow: "hidden"
+},
+
+columnBar: {
+  width: "70%",
+  borderRadius: "8px 8px 4px 4px",
+  transition: "0.4s ease",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "flex-start",
+  paddingTop: "6px"
+},
+
+columnInside: {
+  display: "flex",
+  flexDirection: "column",
+  gap: "4px",
+  alignItems: "center"
+},
+
+idTag: {
+  fontSize: "10px",
+  background: "rgba(0,0,0,0.25)",
+  color: "#fff",
+  padding: "2px 6px",
+  borderRadius: "6px"
+},
+
+moreTag: {
+  fontSize: "10px",
+  color: "#fff",
+  opacity: 0.8
+},
+
+dayBottom: {
+  fontSize: "12px",
+  color: "#ffe9a6",
+  fontWeight: "700"
+},
   kpiGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
