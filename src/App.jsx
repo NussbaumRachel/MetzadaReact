@@ -15,6 +15,7 @@ import AllEmployees from "./feature/Employees/AllEmployees";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./feature/Login/ProtectedRoute";
 import MeasurerDashboard from "./feature/Measurer/MeasurerDashboard";
+import FloatingChat from "./feature/Home/FloatingChat";
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -47,6 +48,7 @@ export default function App() {
             <Route path="/employees" element={<AllEmployees />} />
             <Route path="/measurer" element={<MeasurerDashboard />} />
           </Routes>
+          <FloatingChat />
         </>
       )}
     </div>

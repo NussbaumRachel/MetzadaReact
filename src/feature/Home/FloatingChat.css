@@ -1,0 +1,124 @@
+/* FloatingChat.css */
+
+.floating-chat {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9999;
+    font-family: "Alef", sans-serif;
+}
+
+/* כפתור קטן */
+.chat-toggle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+
+    background: linear-gradient(135deg, #f5d26a, #c99b2b);
+    color: black;
+    font-weight: bold;
+
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* חלון */
+.chat-window {
+    width: 320px;
+    height: 420px;
+
+    margin-bottom: 12px;
+
+    border-radius: 18px;
+
+    background: rgba(10,10,10,0.92);
+    border: 1px solid rgba(245,210,106,0.15);
+
+    display: flex;
+    flex-direction: column;
+
+    backdrop-filter: blur(14px);
+}
+
+/* HEADER */
+.chat-header {
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    color: #f5d26a;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* BODY - בלי scrollbar מכוער */
+.chat-body {
+    flex: 1;
+    padding: 10px;
+
+    overflow-y: auto;
+    scrollbar-width: thin;              /* Firefox */
+    scrollbar-color: rgba(245,210,106,0.3) transparent;
+}
+
+.chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+    background: rgba(245,210,106,0.25);
+    border-radius: 10px;
+}
+
+.msg {
+    max-width: 80%;
+    padding: 10px 12px;
+    margin: 6px 0;
+    border-radius: 14px;
+    font-size: 13px;
+    animation: fade 0.25s ease;
+}
+
+.msg.bot {
+    background: rgba(245,210,106,0.08);
+    align-self: flex-start;
+}
+
+.msg.user {
+    background: rgba(255,255,255,0.06);
+    align-self: flex-end;
+}
+
+/* INPUT */
+.chat-input {
+    display: flex;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.chat-input input {
+    flex: 1;
+    border: none;
+    outline: none;
+
+    padding: 12px;
+    background: transparent;
+    color: white;
+}
+
+.chat-input button {
+    width: 44px;
+    border: none;
+    background: #f5d26a;
+    cursor: pointer;
+}
+
+/* ANIMATION */
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
