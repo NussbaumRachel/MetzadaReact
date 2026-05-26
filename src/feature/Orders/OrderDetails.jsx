@@ -20,7 +20,24 @@ const OrderDetails = () => {
                 : [...prev, itemId]               // נוסיף את המזהה של הפריט הנבחר
         );
     };
-    
+    const changeFormat = (dateStr) => {
+    if (!dateStr) return "--";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("he-IL");
+}
+const getStatusInHebrew = (status) => {
+    switch (status) {
+        case "open": return "פתוחה";
+        case "in_progress": return "בתהליך";
+        case "completed": return "הושלמה";
+        default: return "לא ידוע";
+    }
+};
+const getHours = (dateStr) => {
+    if (!dateStr) return "--";
+    const date = new Date(dateStr);
+    return date.toLocaleTimeString("he-IL", { hour: '2-digit', minute: '2-digit' });
+}
 const calcPrice = (item) => {
     debugger;
     if(item.itemType === 1) {
@@ -38,6 +55,13 @@ const calcPrice = (item) => {
     }, [orderId, orders]);
 
     if (!order) return <div className="lux-empty">לא נמצאה הזמנה</div>;
+const getType = (type) => {
+    switch(type) {
+        case 1: return "דלת";
+        case 2: return "משקוף";
+        default: return "לא ידוע";
+    }
+};
 
     return (
         <div className="lux-container">
@@ -48,9 +72,12 @@ const calcPrice = (item) => {
                 </div>
 
                 <div className="lux-info-grid">
-                    <div><b>לקוח:</b> {order.custName}</div>
-                    <div><b>תאריך:</b> {new Date(order.deliveryDate).toLocaleDateString("he-IL")}</div>
+                    <div><b>לקוח:</b> {order.custName}</div> 
                     <div><b>כתובת:</b> {order.street} {order.buildingNum}</div>
+                    <div><b>תאריך אספקה:</b> {changeFormat(order.deliveryDate)}</div>
+                    <div><b>תאריך עדכון אחרון: </b> ביום: {changeFormat(order.updateDate)}  בשעה:  {getHours(order.updateDate)} </div>
+                <div><b>סטטוס הזמנה:</b> {getStatusInHebrew(order.status) || "--"}</div>
+
                     <div><b>הערות:</b> {order.notes || "--"}</div>
                 </div>
             </div>
@@ -64,13 +91,13 @@ const calcPrice = (item) => {
             onClick={() => toggleItem(item.itemId)}
         >
             <div className="lux-item-header">
-                <span className="lux-badge">{item.itemType}</span>
+                <span className="lux-badge">{getType(item.itemType)}</span>
                 <span className="lux-qty">כמות: {item.quantity}</span>
             </div>
 
             <div className="lux-grid">
                 <div className="lux-field">
-                    <span className="lux-label">מחיר</span>
+                    <span className="lux-label">סך מחיר</span>
                     <span className="lux-value">{calcPrice(item)} ₪</span>
                 </div>
 

@@ -7,23 +7,28 @@ import './AddOrder.css';
 import { date, z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { log } from "three/src/utils.js";
-
+import Modal from "../Modals/Modal";
+import AddCustomer from "../Customers/CustomerForm"; // או הנתיב הנכון אצלך
 
 const AddOrder = ({ existingOrder }) => {
   const navigate = useNavigate();
 
-  const goToAddCustomer = () => {
-    navigate("/add-customer", {
-      state: { name: search }
-    });
-  };
-
+  // const goToAddCustomer = () => {
+  //   navigate("/add-customer", {
+  //     state: { name: search, setIsFormOpen: true }
+  //   });
+  // };
+ const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState([]);
   const custs = useSelector(state => state.customers.customers) || []
   const [search, setSearch] = useState("");
   const [filteredCustomers, setFilteredCustomers] = useState(custs);
   const [showDropdown, setShowDropdown] = useState(false);
-  useEffect(() => {
+  const [isChange,setIsChange] = useState(false)
+  const goToAddCustomer = () => {
+  setIsAddCustomerOpen(true);
+};
+useEffect(() => {
     if (!search) {
       setFilteredCustomers([]);
       return;
@@ -131,12 +136,13 @@ const AddOrder = ({ existingOrder }) => {
 
       return {
         ...prev,
-        orderItems: items
+        orderItems: items,
+        updateDate: new Date().toISOString(),
       };
     });
   };
   const createOrd = (e) => {
-    console.log("createOrd");
+    // console.log("createOrd");
 
     e.preventDefault();
     const finalOrder = {
@@ -264,6 +270,22 @@ const AddOrder = ({ existingOrder }) => {
         </div>
 
       </form>
+     
+{isAddCustomerOpen && (
+  <Modal isOpen={isAddCustomerOpen} onClose={() => setIsAddCustomerOpen(false)}>
+    <AddCustomer
+      // onSuccess={(newCustomer) => {
+      //   setSearch(newCustomer.name);
+      //   setIsAddCustomerOpen(false);
+      // }}
+            onSave={() => setIsAddCustomerOpen(false)}
+
+      onClose={() => setIsAddCustomerOpen(false)}
+      defaultName={search}
+    />
+  </Modal>
+)}
+
     </div>
   );
 };

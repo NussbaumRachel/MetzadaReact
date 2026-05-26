@@ -10,7 +10,7 @@ import GenerateDoor from "../Orders/GenerateDoor";
 import OrderItemDetails from "../Orders/OrderItemDetails";
 
 export default function AllFrames() {
-  const frames = useSelector(state => state.frames.frames) || [];
+  const frames = useSelector(state => state.frames.frames)?.filter(f => f.statusArchive !== true) || [];
   const dispatch = useDispatch();
   const [selectedDoor2, setSelectedDoor2] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +50,8 @@ export default function AllFrames() {
           <thead>
             <tr>
               <th>ID</th>
+              <th>סוג משקוף</th>
+              <th>תיאור</th>
               <th>פרופיל</th>
               <th>רוחב</th>
               <th>גובה</th>
@@ -57,9 +59,31 @@ export default function AllFrames() {
             </tr>
           </thead>
           <tbody>
+           {/*{ field: "side", hebrow: "צד", type: "text" },
+    { field: "width", hebrow: "רוחב", type: "number" },
+    { field: "height", hebrow: "גובה", type: "number" },
+    { field: "hinges", hebrow: "מספר צירים", type: "number" },
+    { field: "perforationTypeForShoeing", hebrow: "סוג ניקוב לפירזול", type: "text" },
+    { field: "skylight", hebrow: "צוהר", type: "text" },
+    { field: "perforation", hebrow: "ניקוב", type: "text" },
+    { field: "shoeingA", hebrow: "פירזול A", type: "text" },
+    { field: "shoeingB", hebrow: "פירזול B", type: "text" },
+    { field: "shoeingC", hebrow: "פירזול C", type: "text" },
+    { field: "finishing", hebrow: "גימור", type: "text" }
+        , { field: "type", hebrow: "סוג דלת", type: "text" },
+    { field: "opening", hebrow: "פתיחה", type: "text" },
+    { field: "color", hebrow: "צבע", type: "text" },
+    { field: "leaf", hebrow: "עלים", type: "text" },
+    { field: "internalLayoutWidth", hebrow: "רוחב פרופיל פנימי", type: "number" },
+    { field: "internalLayoutLength", hebrow: "גובה פרופיל פנימי", type: "number" },
+    { field: "externalLayoutWidth", hebrow: "רוחב פרופיל חיצוני", type: "number" },
+    { field: "externalLayoutLength", hebrow: "גובה פרופיל חיצוני", type: "number" },
+    { field: "price", hebrow: "מחיר", type: "number" } */}
             {frames.map(f => (
               <tr key={f.id}>
                 <td>{f.id}</td>
+                <td>{f.type}</td>
+                <td>{f.desc}</td>
                 <td>{f.profile}</td>
                 <td>{f.width}</td>
                 <td>{f.height}</td>

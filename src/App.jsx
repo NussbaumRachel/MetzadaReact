@@ -1,4 +1,4 @@
-import openai from "openai";
+// import openai from "openai";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./feature/Header/Header";
@@ -36,7 +36,7 @@ export default function App() {
             <Route path="/customers" element={<AllCustomers />} />
             <Route path="/add-customer" element={<CustomerForm />} />
             <Route
-              path="/manager"
+              path="/manager/*"
               element={
                 <ProtectedRoute loggedIn={loggedIn} userRole={userRole} allowedRoles={["Manager"]}>
                   <Manager />
@@ -45,8 +45,9 @@ export default function App() {
             />
             <Route path="*" element={<Navigate to="/home" replace />} />
             <Route path="/order-details/:orderId" element={<OrderDetails />} />
-            <Route path="/employees" element={<AllEmployees />} />
+            {/* <Route path="/employees" element={<AllEmployees />} /> */}
             <Route path="/measurer" element={<MeasurerDashboard />} />
+            {/* <Route path="/dashboard" element={<App2 />} /> */}
           </Routes>
           <FloatingChat />
         </>

@@ -42,15 +42,34 @@ function AllOrders() {
     // .filter(order => filter === "הכול" ? true : order.status === filter)
     // .filter(order => order.custName.toLowerCase().includes(customerSearch.toLowerCase()));
     const userRole = useSelector(state => state.employees.user?.role);
+    const changeFormat = (dateStr) => {
+        const formattedDate = new Date(dateStr).toLocaleDateString(
+            'he-IL',
+            {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'numeric',
+                year: 'numeric',
+            }
+        );
+return formattedDate;
+
+        // const date = new Date(dateStr);
+        // const day = String(date.getDate()).padStart(2, '0');
+        // const month = String(date.getMonth() + 1).padStart(2, '0');
+        // const year = date.getFullYear();
+        // return `${day}/${month}/${year}`;
+    };
     const renderStatusPill = (status) => {
         if (status === "opening") {
             return (
                 <span className="status-pill status-open"> <span className="status-dot" /> פתוחה </span>);
         }
-        if (status === "in-progress") { return (<span className="status-pill status-in-progress"> <span className="status-dot" /> בתהליך ייצור </span>); }
+        if (status === "in_progress") { return (<span className="status-pill status-in-progress"> <span className="status-dot" /> בתהליך ייצור </span>); }
         if (status === "completed") { return (<span className="status-pill status-done"> <span className="status-dot" /> הושלמה </span>); }
-
-        return (<span className="status-pill status-closed"> <span className="status-dot" /> סגורה </span>);
+        else {
+            return (<span className="status-pill status-closed"> <span className="status-dot" /> סגורה </span>);
+        };
     };
     const dis = useDispatch()
     const [loading, setLoading] = useState(true);
@@ -126,7 +145,7 @@ function AllOrders() {
             </div> */}
             <div className="orders-filters">
                 <span>סינון לפי סטטוס:</span>
-                {["הכול", "opening", "in-progress", "completed"].map((f) => (
+                {["הכול", "opening", "in_progress", "completed"].map((f) => (
                     <button key={f} className={`filter-pill ${filter === f ? "active" : ""}`} onClick={() => setFilter(f)} > {f} </button>))}
             </div>
             <div className="orders-table-wrapper">
@@ -150,9 +169,9 @@ function AllOrders() {
                             <tr key={order.id}>
                                 <td>{order.id}</td>
                                 <td>{order.custName}</td>
-                                <td>{order.orderDate}</td>
-                                <td>{order.updateDate}</td>
-                                <td>{order.deliveryDate}</td>
+                                <td>{changeFormat(order.orderDate)}</td>
+                                <td>{changeFormat(order.updateDate)}</td>
+                                <td>{changeFormat(order.deliveryDate)}</td>
                                 <td>{renderStatusPill(order.status)}</td>
                                 <td>{getContactName(order.custId)}</td>
                                 <td>{order.notes}</td>

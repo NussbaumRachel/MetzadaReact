@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children } from "react";
 import { NavLink } from "react-router-dom";
 
 export default function Header() {
@@ -8,9 +8,11 @@ export default function Header() {
     { path: "/doors", label: "דלתות" },
     { path: "/frames", label: "משקופים" },
     { path: "/customers", label: "לקוחות" },
-    { path: "/manager", label: "ניהול " },
-    { path: "/employees", label: " עובדים" },
-    { path: "/measurer", label: "מודד" }
+    { path: "/manager", label: "ניהול "  },
+    // { path: "/employees", label: "עובדים" },
+    { path: "/measurer", label: "מודד" },
+    // { path: "/dashboard", label: "לוח בקרה" },
+    // { path: "/calendar", label: "לוח שנה" }
   ];
 
   return (

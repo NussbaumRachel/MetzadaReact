@@ -1,0 +1,161 @@
+/* /* .orders-page {
+
+    padding: 20px; /* Updated padding */
+/* } */
+
+.orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    margin-bottom: 20px; /* Updated margin-bottom */
+}
+
+.orders-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.orders-title {
+
+
+    font-size: 24px; /* Updated font size */
+    color: #f5d26a; /* Updated color */
+}
+
+.orders-subtitle {
+    font-size: 14px;
+    color: #d8c06a;
+}
+
+.orders-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #f5d26a, #c99b2b);
+    color: #000000;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.85);
+    color: #f5d26a;
+    filter: brightness(1.03);
+}
+
+.btn-secondary {
+    background: transparent;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 210, 106, 0.5);
+    color: #f5d26a;
+    padding: 9px 18px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(245, 210, 106, 0.08);
+    border-color: #f5d26a;
+}
+
+/* .orders-table-wrapper {
+    margin-top: 8px;
+    border-radius: 16px;
+    border: 1px solid rgba(120, 98, 32, 0.9);
+    background: radial-gradient(circle at top right, #2b210a 0, #050505 55%, #000000 100%);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+    backdrop-filter: blur(6px);
+}
+.orders-page {
+    padding: 20px;
+}
+
+.orders-header {
+    margin-bottom: 20px;
+}
+
+.orders-title {
+    font-size: 24px;
+    color: #f5d26a;
+}
+
+.orders-actions {
+    margin-top: 10px;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders-table th, .orders-table td {
+    border: 1px solid #aaa;
+    padding: 8px;
+    text-align: right;
+}
+
+.orders-table th {
+    background-color: #444;
+    color: white;
+} */
+.calendar-wrapper {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 18px;
+    background: radial-gradient(circle at top, rgba(245, 210, 106, 0.12), rgba(0, 0, 0, 0.95));
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.9);
+    text-align: center;
+    width: 50%;
+    margin-left: auto;
+     margin-right: auto;
+}
+
+/* התאמת הספריה לעיצוב */
+.react-calendar {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #f5d26a;
+    font-family: "Alef", Arial, sans-serif;
+}
+
+.react-calendar__tile {
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.react-calendar__tile:hover {
+    background: rgba(245, 210, 106, 0.2);
+}
+
+/* יום עם אספקה */
+.delivery-day {
+    background: linear-gradient(135deg, #f5d26a, #c99b2b) !important;
+    color: #000 !important;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(245, 210, 106, 0.8);
+}
+
+/* יום נבחר */
+.react-calendar__tile--active {
+    background: #d9cd4b !important;
+    color: #000 !important;
+}
+.react-calendar__tile:hover {
+        background: #d9cd4b !important;
+
+    transform: scale(1.05);
+}  

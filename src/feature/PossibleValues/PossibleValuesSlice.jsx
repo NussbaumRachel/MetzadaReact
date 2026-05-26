@@ -9,7 +9,6 @@ export const checkValueLimits = createAsyncThunk("possibleValues/checkValueLimit
 export const checkAllLimits = createAsyncThunk("possibleValues/checkAllLimits", getLimits)
 export const DeleteOneLimit = createAsyncThunk("possibleValues/DeleteOneLimit", DeleteLimit)
 export const CreateLimit = createAsyncThunk("possibleValues/CreateLimit", addCheck)
-
 const initialState = {
   fields: ["Desc", "side", "width", "height", "hinges", "perforation", "type", "leaf", "color", "FramesHeightWithShutter",
     "wallFrameThickness", "profile", "opening", "finishing", "perforationTypeForShoeing", "skylight",

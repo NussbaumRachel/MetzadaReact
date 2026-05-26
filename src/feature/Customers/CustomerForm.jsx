@@ -1,15 +1,15 @@
 // CustomerForm.jsx
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
+// import Modal from "../Modals/Modal";
+import {Modal} from "../Modals/modal.css";
 import { useDispatch } from "react-redux";
 import { createCustomer, updateCustomer } from "./CustomerSlice";
-import { de, no } from "zod/v4/locales";
-export default function CustomerForm({ existing, onSave }) {
+import { de, fr, no } from "zod/v4/locales";
+export default function CustomerForm({ existing, onSave, defaultName = "" }) {
 const location = useLocation();
 const dispatch = useDispatch();
-const defaultName = location.state?.name || "";
-  const [form, setForm] = useState({
+const [form, setForm] = useState({
     id: "",
     name: defaultName,
     phone: "",
@@ -30,7 +30,7 @@ const addCustomer = (form) => {
   debugger;
   !form.id ? dispatch(createCustomer(newCustomer)) : dispatch(updateCustomer(newCustomer));
 
-  onSave(false);
+  onSave(newCustomer); // כאן שולחים את הלקוח החדש, לא false??????????????????????????????????????????
 };
 
   useEffect(()=>{

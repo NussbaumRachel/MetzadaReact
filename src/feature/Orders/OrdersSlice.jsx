@@ -38,7 +38,8 @@ export const addNewOrderAsync = createAsyncThunk(
       status: order.status,
       orderItems: [],
       orderDate: order.existingOrder?.orderDate || new Date().toISOString(),
-      updateDate: new Date().toISOString() 
+      updateDate: new Date().toISOString(),
+      // new Date().toLocaleDateString('he-IL').toISOString(),
     };
 
     for (let i = 0; i < order.orderItems.length; i++) {

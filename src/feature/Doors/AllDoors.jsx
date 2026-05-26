@@ -10,7 +10,8 @@ import OrderItemDetails from "../Orders/OrderItemDetails";
 import GenerateDoor from "../Orders/GenerateDoor";
 
 export default function AllDoors() {
-    const doors = useSelector(state => state.doors.doors) || [];
+    const doorFields = useSelector(state => state.doors.doorsFields) || [];
+    const doors = useSelector(state => state.doors.doors)?.filter(d => d.statusArchive !== true) || [];
     const dispatch = useDispatch();
     const [selectedDoor2, setSelectedDoor2] = useState(null);
 const [isOpen, setIsOpen] = useState(false);
@@ -51,11 +52,14 @@ const [isOpen, setIsOpen] = useState(false);
                 <table className="orders-table">
                     <thead>
                         <tr>
+
                             <th>ID</th>
                             <th>סוג דלת</th>
                             <th>מחיר</th>
                             <th>רוחב</th>
                             <th>גובה</th>
+                            <th>צבע</th>
+                            <td>צד</td>
                             <th>פעולות</th>
                         </tr>
                     </thead>
@@ -67,6 +71,10 @@ const [isOpen, setIsOpen] = useState(false);
                                 <td>{d.price}</td>
                                 <td>{d.width}</td>
                                 <td>{d.height}</td>
+                                <td>{d.color}</td>
+                                <td>{d.side}</td>
+                                
+                               
                                 <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(d)}>פרטים</button>
                                     <button className="action-btn" onClick={() => openDelete(d)}>מחיקה</button>
                                     <button className="action-btn" onClick={() => openEdit(d)}>עריכה</button> 

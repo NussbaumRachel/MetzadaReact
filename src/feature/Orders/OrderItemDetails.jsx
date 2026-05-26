@@ -9,7 +9,11 @@ const OrderItemDetails = ({ item }) => {
     const frames = useSelector(s => s.frames.frames);
 
     const [itemDetails, setItemDetails] = useState(null);
-
+const getHebrewField = (field) => {
+    const allFields = [...doorFields, ...frameFields];
+    const foundField = allFields.find(f => f.field === field);
+    return foundField ? foundField.hebrow : field;
+}
     useEffect(() => {
         if (item.itemType === 1) {
             setItemDetails(doors.find(d => d.id === item.itemId));
@@ -32,7 +36,7 @@ const OrderItemDetails = ({ item }) => {
             <div className="lux-grid">
                 {fields.map(f => (
                     <div key={f.field} className="lux-field">
-                        <span className="lux-label">{f.field}</span>
+                        <span className="lux-label">{getHebrewField(f.field)}</span>
                         <span className="lux-value">
                             {itemDetails ? itemDetails[f.field] : "--"}
                         </span>
