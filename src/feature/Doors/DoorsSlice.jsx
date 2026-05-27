@@ -46,7 +46,7 @@ const initialState = {
         , { field: "type", hebrow: "סוג דלת", type: "text" },
     { field: "opening", hebrow: "פתיחה", type: "text" },
     { field: "color", hebrow: "צבע", type: "text" },
-    { field: "leaf", hebrow: "עלים", type: "text" },
+    { field: "leaf", hebrow: "כנף", type: "text" },
     { field: "internalLayoutWidth", hebrow: "רוחב פרופיל פנימי", type: "number" },
     { field: "internalLayoutLength", hebrow: "גובה פרופיל פנימי", type: "number" },
     { field: "externalLayoutWidth", hebrow: "רוחב פרופיל חיצוני", type: "number" },

@@ -8,7 +8,7 @@ import { deleteDoor, getAllDoors } from "./DoorsSlice";
 import ManagePossibleValuesButton from "../PossibleValues/ManagePossibleValuesButton";
 import OrderItemDetails from "../Orders/OrderItemDetails";
 import GenerateDoor from "../Orders/GenerateDoor";
-
+import { Link } from "react-router-dom";
 export default function AllDoors() {
     const doorFields = useSelector(state => state.doors.doorsFields) || [];
     const doors = useSelector(state => state.doors.doors)?.filter(d => d.statusArchive !== true) || [];
@@ -60,6 +60,7 @@ const [isOpen, setIsOpen] = useState(false);
                             <th>גובה</th>
                             <th>צבע</th>
                             <td>צד</td>
+                            <td>קובץ למכונה</td>
                             <th>פעולות</th>
                         </tr>
                     </thead>
@@ -73,9 +74,15 @@ const [isOpen, setIsOpen] = useState(false);
                                 <td>{d.height}</td>
                                 <td>{d.color}</td>
                                 <td>{d.side}</td>
-                                
-                               
-                                <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(d)}>פרטים</button>
+                                <td><a
+                                    className="file-link"
+                                    href={d.textFileForTheMachine}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    📎 קובץ למכונה
+                                </a></td>
+                                                                <td> <div className="actions-cell"> <button className="action-btn" onClick={() => openDetails(d)}>פרטים</button>
                                     <button className="action-btn" onClick={() => openDelete(d)}>מחיקה</button>
                                     <button className="action-btn" onClick={() => openEdit(d)}>עריכה</button> 
                                         

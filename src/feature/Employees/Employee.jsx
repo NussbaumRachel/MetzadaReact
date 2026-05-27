@@ -52,18 +52,21 @@ export default function Employee({ employee, onClose, onSave }) {
                 <form onSubmit={submit} className="employee-form">
                     <div className="employee-grid">
                         {/* שדות קלט עבור פרטי העובד */}
+                        {/* <label>שם</label> */}
                         <input
                             name="name"
                             placeholder="שם עובד"
                             value={form.name || ""}
                             onChange={handleChange}
                         />
+                        {/* <label>אימייל</label> */}
                         <input
                             name="email"
                             placeholder="אימייל"
                             value={form.email || ""}
                             onChange={handleChange}
                         />
+                        {/* <label>סיסמה</label> */}
                         <input
                             name="password"
                             placeholder="סיסמה"
@@ -85,24 +88,28 @@ export default function Employee({ employee, onClose, onSave }) {
                             value={form.status || ""}
                             onChange={handleChange}
                         /> */}
+                        {/* <label>טלפון 1</label> */}
                         <input
                             name="phone1"
                             placeholder="טלפון 1"
                             value={form.phone1 || ""}
                             onChange={handleChange}
                         />
+                        {/* <label>טלפון 2</label> */}
                         <input
                             name="phone2"
                             placeholder="טלפון 2"
                             value={form.phone2 || ""}
                             onChange={handleChange}
                         />
+                        {/* <label>כתובת</label> */}
                         <input
                             name="address"
                             placeholder="כתובת"
                             value={form.address || ""}
                             onChange={handleChange}
                         />
+                        {/* <label>תאריך לידה</label> */}
                         <input
                             type="date"
                             name="birthDate"
