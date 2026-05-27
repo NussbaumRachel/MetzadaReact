@@ -33,7 +33,10 @@ export const addNewOrderAsync = createAsyncThunk(
       buildingNum: order.buildingNum,
       floor: order.floor,
       apartmentNum: order.apartmentNum,
-      price: order.price || 0,
+price: order.orderItems?.reduce(
+  (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+  0
+) || 0,
       notes: order.notes,
       status: order.status,
       orderItems: [],

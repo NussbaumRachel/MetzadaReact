@@ -66,17 +66,17 @@ export default function Dashboard() {
     const map = {};
 
     orders.forEach((o) => {
-      if (!o.createDate) return;
+      if (!o.orderDate) return;
 
-      const date = new Date(o.createDate);
+      const date = new Date(o.orderDate);
 
-      const key = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 
       map[key] = (map[key] || 0) + (o.price || 0);
     });
 
     return Object.entries(map)
-      .sort(([a], [b]) => new Date(a) - new Date(b))
+      .sort(([a], [b]) => a.localeCompare(b)) // מיון נכון לפי טקסט YYYY-MM
       .map(([month, value]) => ({
         month,
         value,
@@ -101,10 +101,23 @@ export default function Dashboard() {
     }));
   }, [employees]);
 
-  const doorsData = useMemo(() => {
+  // const doorsData = useMemo(() => {
+  //   const map = {};
+  //   doors.forEach((d) => {
+  //     map[d.type] = (map[d.type] || 0) + (d.sales || 0);
+  //   });
+
+  //   return Object.entries(map).map(([name, value]) => ({
+  //     name,
+  //     value,
+  //   }));
+  // }, [doors]);
+  const doorsTypeData = useMemo(() => {
     const map = {};
+
     doors.forEach((d) => {
-      map[d.type] = (map[d.type] || 0) + (d.sales || 0);
+      const type = d.type || "לא מוגדר";
+      map[type] = (map[type] || 0) + 1;
     });
 
     return Object.entries(map).map(([name, value]) => ({
@@ -160,20 +173,49 @@ export default function Dashboard() {
     return "linear-gradient(90deg,#ef4444,#b91c1c)";
   }
   // חישוב צמיחת לקוחות לפי חודש מההזמנות בפועל
+  // const customersGrowth = useMemo(() => {
+  //   const map = {};
+  //   orders.forEach(o => {
+  //     if (o.customerId || o.custId) {
+  //       const m = o.month || "לא ידוע";
+  //       map[m] = (map[m] || new Set());
+  //       map[m].add(o.customerId || o.custId);
+  //     }
+  //   });
+  //   return Object.entries(map).map(([month, set]) => ({
+  //     x: month,
+  //     y: set.size
+  //   })).sort((a, b) => a.x.localeCompare(b.x));
+  // }, [orders]);
   const customersGrowth = useMemo(() => {
     const map = {};
-    orders.forEach(o => {
-      if (o.customerId || o.custId) {
-        const m = o.month || "לא ידוע";
-        map[m] = (map[m] || new Set());
-        map[m].add(o.customerId || o.custId);
+
+    customers.forEach((o) => {
+      if (!o.createdAt) return;
+
+      const date = new Date(o.createdAt);
+
+      const monthKey = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}`;
+
+      const customerId = o.id;
+      if (!customerId) return;
+
+      if (!map[monthKey]) {
+        map[monthKey] = new Set();
       }
+
+      map[monthKey].add(customerId);
     });
-    return Object.entries(map).map(([month, set]) => ({
-      x: month,
-      y: set.size
-    })).sort((a, b) => a.x.localeCompare(b.x));
-  }, [orders]);
+
+    return Object.entries(map)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, set]) => ({
+        month,
+        value: set.size,
+      }));
+  }, [customers]);
   const navigate = useNavigate();
   // פילוח הכנסות לפי מחלקות עובדים
   const revenueByDepartment = useMemo(() => {
@@ -233,7 +275,7 @@ export default function Dashboard() {
 
       {/* ================= TOP ROW ================= */}
       <div style={styles.grid}>
-        <Box title="צמיחת לקוחות">
+        {/* <Box title="צמיחת לקוחות">
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={customersGrowth}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -243,9 +285,41 @@ export default function Dashboard() {
               <Line type="monotone" dataKey="y" stroke="#3b82f6" />
             </LineChart>
           </ResponsiveContainer>
-        </Box>
+        </Box> */}
+        <Box title="צמיחת לקוחות">
 
-        <Box title="סטטוס הזמנות">
+          <ResponsiveContainer width="100%" height={220}>
+
+            <LineChart data={customersGrowth}>
+
+              <defs>
+                <linearGradient id="customerLine" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#3b82f6" />
+                  <stop offset="100%" stopColor="#22c55e" />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="url(#customerLine)"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+
+            </LineChart>
+
+          </ResponsiveContainer>
+
+        </Box>
+        {/* <Box title="סטטוס הזמנות">
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
               <Pie data={statusData} dataKey="value" outerRadius={60}>
@@ -256,15 +330,48 @@ export default function Dashboard() {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
-        </Box>
+        </Box> */}
 
-        <Box title="הכנסות לפי חודש">
+        {/* <Box title="הכנסות לפי חודש">
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={monthlyData}>
               <Bar dataKey="value" fill="#22c55e" />
               <Tooltip />
             </BarChart>
           </ResponsiveContainer>
+        </Box> */}
+        <Box title="הכנסות לפי חודש">
+
+          <ResponsiveContainer width="100%" height={220}>
+
+            <LineChart data={monthlyData}>
+              <defs>
+                <linearGradient id="lineColor" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#f5d26a" />
+                  <stop offset="100%" stopColor="#c99b2b" />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+
+              <XAxis dataKey="month" />
+
+              <YAxis />
+
+              <Tooltip />
+
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="#f5d26a"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+
+            </LineChart>
+
+          </ResponsiveContainer>
+
         </Box>
       </div>
 
@@ -272,62 +379,85 @@ export default function Dashboard() {
       <div style={styles.grid}>
 
 
-        <Box title="דלתות לפי סוג">
+        {/* <Box title="דלתות לפי סוג">
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={doorsData}>
               <Bar dataKey="value" fill="#f59e0b" />
               <Tooltip />
             </BarChart>
           </ResponsiveContainer>
+        </Box> */}
+        <Box title="התפלגות סוגי דלתות">
+
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={doorsTypeData}>
+
+              <CartesianGrid strokeDasharray="3 3" />
+
+              <XAxis dataKey="name" />
+
+              <YAxis />
+
+              <Tooltip />
+
+              <Bar dataKey="value">
+                {doorsTypeData.map((_, i) => (
+                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                ))}
+              </Bar>
+
+            </BarChart>
+          </ResponsiveContainer>
+
         </Box>
         <Box title="עומס אספקות השבוע">
 
-  <div style={styles.verticalGraph}>
+          <div style={styles.verticalGraph}>
 
-    {weekDeliveryData.map((d) => (
-      <div key={d.day} style={styles.columnWrap}>
+            {weekDeliveryData.map((d) => (
+              <div key={d.day} style={styles.columnWrap}>
 
-        {/* העמודה */}
-        <div style={styles.columnBase}>
+                {/* העמודה */}
+                <div style={styles.columnBase}>
 
-          <div
-            style={{
-              ...styles.columnBar,
-              height: `${Math.min(d.count * 25, 140)}px`,
-              background: getColor(d.count),
-            }}
-          >
+                  <div
+                    style={{
+                      ...styles.columnBar,
+                      height: `${Math.min(d.count * 25, 140)}px`,
+                      background: getColor(d.count),
+                    }}
+                  >
 
-            {/* IDs בתוך העמודה */}
-            <div style={styles.columnInside}>
-              {d.ids.slice(0, 2).map((id) => (
-                <span key={id} style={styles.idTag} onClick={() => navigate(`/order-details/${id}`)}>
-                  #{id}
-                </span>
-              ))}
+                    {/* IDs בתוך העמודה */}
+                    <div style={styles.columnInside}>
+                      {d.ids.slice(0, 2).map((id) => (
+                        <span key={id} style={styles.idTag} onClick={() => navigate(`/order-details/${id}`)}>
+                          #{id}
+                        </span>
+                      ))}
 
-              {d.ids.length > 2 && (
-                <span style={styles.moreTag}>
-                  +{d.ids.length - 2}
-                </span>
-              )}
-            </div>
+                      {d.ids.length > 2 && (
+                        <span style={styles.moreTag}>
+                          +{d.ids.length - 2}
+                        </span>
+                      )}
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* יום בתחתית */}
+                <div style={styles.dayBottom}>
+                  {d.day}
+                </div>
+
+              </div>
+            ))}
 
           </div>
 
-        </div>
-
-        {/* יום בתחתית */}
-        <div style={styles.dayBottom}>
-          {d.day}
-        </div>
-
-      </div>
-    ))}
-
-  </div>
-
-</Box>
+        </Box>
         {/* <Box title="שיעור הזמנות">
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
@@ -420,72 +550,72 @@ const styles = {
     marginBottom: 10,
   },
   verticalGraph: {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "flex-end",
-  height: "220px",
-  gap: "30px",
-  padding: "10px 5px",
-  direction: "rtl"
-},
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    height: "220px",
+    gap: "30px",
+    padding: "10px 5px",
+    direction: "rtl"
+  },
 
-columnWrap: {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: "8px",
-  flex: 1
-},
+  columnWrap: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "8px",
+    flex: 1
+  },
 
-columnBase: {
-  width: "100%",
-  height: "160px",
-  display: "flex",
-  alignItems: "flex-end",
-  justifyContent: "center",
-  background: "rgba(255,255,255,0.03)",
-  borderRadius: "10px",
-  border: "1px solid rgba(245,210,106,0.08)",
-  position: "relative",
-  overflow: "hidden"
-},
+  columnBase: {
+    width: "100%",
+    height: "160px",
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "center",
+    background: "rgba(255,255,255,0.03)",
+    borderRadius: "10px",
+    border: "1px solid rgba(245,210,106,0.08)",
+    position: "relative",
+    overflow: "hidden"
+  },
 
-columnBar: {
-  width: "70%",
-  borderRadius: "8px 8px 4px 4px",
-  transition: "0.4s ease",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "flex-start",
-  paddingTop: "6px"
-},
+  columnBar: {
+    width: "70%",
+    borderRadius: "8px 8px 4px 4px",
+    transition: "0.4s ease",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    paddingTop: "6px"
+  },
 
-columnInside: {
-  display: "flex",
-  flexDirection: "column",
-  gap: "4px",
-  alignItems: "center"
-},
+  columnInside: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+    alignItems: "center"
+  },
 
-idTag: {
-  fontSize: "10px",
-  background: "rgba(0,0,0,0.25)",
-  color: "#fff",
-  padding: "2px 6px",
-  borderRadius: "6px"
-},
+  idTag: {
+    fontSize: "10px",
+    background: "rgba(0,0,0,0.25)",
+    color: "#fff",
+    padding: "2px 6px",
+    borderRadius: "6px"
+  },
 
-moreTag: {
-  fontSize: "10px",
-  color: "#fff",
-  opacity: 0.8
-},
+  moreTag: {
+    fontSize: "10px",
+    color: "#fff",
+    opacity: 0.8
+  },
 
-dayBottom: {
-  fontSize: "12px",
-  color: "#ffe9a6",
-  fontWeight: "700"
-},
+  dayBottom: {
+    fontSize: "12px",
+    color: "#ffe9a6",
+    fontWeight: "700"
+  },
   kpiGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
