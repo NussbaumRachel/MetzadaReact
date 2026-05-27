@@ -5,6 +5,7 @@ import 'react-calendar/dist/Calendar.css';
 import HebrewDate from 'hebrew-date';
 import './Calendar1.css';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Calendar1 = () => {
     const [date, setDate] = useState(new Date());
@@ -15,7 +16,7 @@ const Calendar1 = () => {
     //     { id: 3, custName: "דוד ישראלי", deliveryDate: "2024-07-10" },
     // ];
     const orders = useSelector(state => state.orders.orders) || [];
-
+    const navigate = useNavigate();
     const getOrdersByDate = (d) => {
         return orders.filter(order =>
             new Date(order.deliveryDate).toDateString() === d.toDateString()
@@ -33,11 +34,11 @@ const Calendar1 = () => {
     return (
         <div className="calendar-layout">
             {/* צד שמאל - ימי השבוע */}
-            <div className="week-days-column">
+            {/* <div className="week-days-column">
                 {days.map((d, i) => (
                     <div key={i} className="week-day">{d}</div>
                 ))}
-            </div>
+            </div> */}
 
             {/* לוח */}
             <div className="calendar-wrapper custom">
@@ -57,14 +58,14 @@ const Calendar1 = () => {
                         return (
                             <div className="tile-inner">
                                 <div className="dates">
-                                    <span className="greg">{date.getDate()}</span>
-                                    <span className="heb">{getHebrewDate(date)}</span>
+                                    {/* <span className="greg">{date.getDate()}</span> */}
+                                    {/* <span className="heb">{getHebrewDate(date)}</span> */}
                                 </div>
 
                                 {dailyOrders.length > 0 && (
                                     <div className="orders">
                                         {dailyOrders.map(o => (
-                                            <span key={o.id} className="order">
+                                            <span key={o.id} className="order" onClick={() => navigate(`/order-details/${o.id}`)}>
                                                 #{o.id}
                                             </span>
                                         ))}

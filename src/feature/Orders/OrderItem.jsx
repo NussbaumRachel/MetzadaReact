@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addOrder } from "../../Api/OrdersApi";
-import { createDoor, createDoorWithFile, uploadDoorMachineFile } from "../Doors/DoorsSlice";
-import { createFrame, updateTheFrame } from "../Frames/FramesSlice";
+import { createDoor, createDoorWithFile, getAllDoors, uploadDoorMachineFile } from "../Doors/DoorsSlice";
+import { createFrame, getAllFrames, updateTheFrame } from "../Frames/FramesSlice";
 import { updateTheDoor } from "./../Doors/DoorsSlice";
 import { deleteItemFromOrder } from "./OrdersSlice";
 import { log } from "three/src/utils.js";
@@ -156,18 +156,21 @@ const OrderItem = ({ index, item, updateItem, isOrder, isNew }) => {
       updateItem(index, updated);
     }
   };
-const addItem = () => {
+const addItem = async () => {
   if (orderDetails.itemType === "1") {
     if (file) {
-      dispatch(createDoorWithFile({
+      await dispatch(createDoorWithFile({
         doorDetails: orderDetails.doorDetails,
         file
       }));
+      await dispatch(getAllDoors());
     } else {
-      dispatch(createDoor(orderDetails.doorDetails));
+      await dispatch(createDoor(orderDetails.doorDetails));
+      await dispatch(getAllDoors());
     }
   } else {
-    dispatch(createFrame(orderDetails.frameDetails));
+    await dispatch(createFrame(orderDetails.frameDetails));
+    await dispatch(getAllFrames());
   }
 };
   return (

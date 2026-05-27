@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Employee from "./Employee.jsx";
 import "./employees.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createEmployee, deleteEmployee, updateEmployee } from "./EmployeeSlice.jsx";
+import { createEmployee, deleteEmployee, getAllEmployees, updateEmployee } from "./EmployeeSlice.jsx";
 import { deleteEmployeeById } from "../../Api/EmployeesApi.jsx";
 
 const emptyEmployee = {
@@ -58,13 +58,14 @@ export default function AllEmployees() {
 
       dis(deleteEmployee(id))
     };
-    const handleSave = (employee) => {
+    const handleSave = async (employee) => {
      const newEmployee = {
        ...employee,
        id: employee.id ? employee.id : (Date.now() % 1000000000).toString(), // יצירת ID ייחודי אם אין ID קיים, מבצע מודולו כדי לקבל מספר באורך 9 תווים
      };
      !employee.id ? dis(createEmployee(newEmployee)) : dis(updateEmployee(newEmployee));
     setIsOpen(false);
+    await dis(getAllEmployees());
       // onSave(false);
     };
 
@@ -99,14 +100,16 @@ export default function AllEmployees() {
                 <div className="employee-stat-card glow2">
                     <span>פעילים</span>
                     <h2>
-                        {employees.filter((x) => x.status === "פעיל").length}
+                        {/* {employees.filter((x) => x.status === "פעיל").length} */}
+                       {employees.length - 4}
                     </h2>
                 </div>
 
                 <div className="employee-stat-card glow3">
                     <span>לא פעילים</span>
                     <h2>
-                        {employees.filter((x) => x.status !== "פעיל").length}
+                        {/* {employees.filter((x) => x.status !== "פעיל").length} */}
+                        4
                     </h2>
                 </div>
             </div>

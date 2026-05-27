@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { addOrder, deleteOrderItem, getOrders ,updateOrder} from "../../Api/OrdersApi";
-import { createFrame } from "../Frames/FramesSlice"
+import { addOrder, deleteOrderItem, getOrders, updateOrder } from "../../Api/OrdersApi";
+import { createFrame, getAllFrames } from "../Frames/FramesSlice"
 import axios from "axios";
 
-import { createDoor } from "../Doors/DoorsSlice"
+import { createDoor, getAllDoors } from "../Doors/DoorsSlice"
 import { date } from "zod";
 import { log } from "three/src/utils.js";
+import { useSelector } from "react-redux";
 // יצירת פעולה אסינכרונית להוספת הזמנה
 export const createOrder = createAsyncThunk("orders/addOrder", addOrder);
 export const getAllOrders = createAsyncThunk("orders/getOrders", getOrders)
@@ -21,9 +22,9 @@ const initialState = {
 
 export const addNewOrderAsync = createAsyncThunk(
   "orders/addNewOrderAsync",
-  async (order,{ dispatch }) => {
+  async (order, { dispatch }) => {
 
-  const newOrder = {
+    const newOrder = {
       id: order.existingOrder?.id || 0,
       custId: order.custId,
       custName: order.custName,
@@ -33,10 +34,10 @@ export const addNewOrderAsync = createAsyncThunk(
       buildingNum: order.buildingNum,
       floor: order.floor,
       apartmentNum: order.apartmentNum,
-price: order.orderItems?.reduce(
-  (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
-  0
-) || 0,
+      price: order.orderItems?.reduce(
+        (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+        0
+      ) || 0,
       notes: order.notes,
       status: order.status,
       orderItems: [],
@@ -46,23 +47,33 @@ price: order.orderItems?.reduce(
     };
 
     for (let i = 0; i < order.orderItems.length; i++) {
-      if (order.orderItems[i].itemType === 1 ||order.orderItems[i].itemType === "1") {
-        
+      if (order.orderItems[i].itemType === 1 || order.orderItems[i].itemType === "1") {
+
         let id = await dispatch(createDoor(order.orderItems[i].doorDetails));
-        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "1", itemId: id.payload, quantity: order.orderItems[i].quantity ,status:order.orderItems[i].status || 'opening',orderItemDate:order.orderItems[i].orderItemDate || new Date().toISOString(),updateDate: new Date().toISOString()});
+        await dispatch(getAllDoors());
+        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "1", itemId: id.payload, quantity: order.orderItems[i].quantity, status: order.orderItems[i].status || 'opening', orderItemDate: order.orderItems[i].orderItemDate || new Date().toISOString(), updateDate: new Date().toISOString() });
       }
-        else if (order.orderItems[i].itemType === 2 || order.orderItems[i].itemType === "2") {
-        
+      else if (order.orderItems[i].itemType === 2 || order.orderItems[i].itemType === "2") {
+
         let id = await dispatch(createFrame(order.orderItems[i].frameDetails));
-        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "2", itemId: id.payload, quantity: order.orderItems[i].quantity,status:order.orderItems[i].status || 'opening',orderItemDate:order.orderItems[i].orderItemDate || new Date().toISOString(),updateDate: new Date().toISOString() });
+        await dispatch(getAllFrames());
+        newOrder.orderItems.push({ id: 0, orderId: order.existingOrder?.id || 0, itemType: "2", itemId: id.payload, quantity: order.orderItems[i].quantity, status: order.orderItems[i].status || 'opening', orderItemDate: order.orderItems[i].orderItemDate || new Date().toISOString(), updateDate: new Date().toISOString() });
       }
     }
     console.log(newOrder, "before adding order");
-    console.log("order.existingOrder",order.existingOrder);
-      if(order.existingOrder==null)
-      {await dispatch(createOrder(newOrder))}
+    console.log("order.existingOrder", order.existingOrder);
+    if (order.existingOrder == null) {
+      newOrder.employeeId = useSelector(state => state.employees.user?.id) || 0;
+      await dispatch(createOrder(newOrder));
+      await dispatch(getAllOrders());
+
+    }
     else {
-      await dispatch(updateOrder(newOrder))}
+
+      await dispatch(updateTheOrder(newOrder));
+
+      await dispatch(getAllOrders());
+    }
   }
 );
 
@@ -71,7 +82,7 @@ const ordersSlice = createSlice({
   name: "orders", // שם הסלייס
   initialState,   // מצב התחלתי
   reducers: {
-   // כאן ניתן להוסיף רידוסרים נוספים אם יש צורך
+    // כאן ניתן להוסיף רידוסרים נוספים אם יש צורך
   },
   extraReducers: (builder) => {
     builder
@@ -82,7 +93,7 @@ const ordersSlice = createSlice({
       .addCase(getAllOrders.fulfilled, (state, action) => {
         state.status = "succeeded"; // עדכון הסטטוס ל-"succeeded"
         state.orders = action.payload; // הוספת הזמנה חדשה למערך ההזמנות
-      
+
       })
       // כאשר הבקשה נכשלה
       .addCase(getAllOrders.rejected, (state, action) => {
@@ -97,9 +108,9 @@ const ordersSlice = createSlice({
       .addCase(createOrder.fulfilled, (state, action) => {
         state.status = "succeeded"; // עדכון הסטטוס ל-"succeeded"
         getAllOrders() // הוספת הזמנה חדשה למערך ההזמנות
-      debugger
-        console.log("state.orders",state.orders);
-      
+        debugger
+        console.log("state.orders", state.orders);
+
       })
       // כאשר הבקשה נכשלה
       .addCase(createOrder.rejected, (state, action) => {
@@ -107,7 +118,7 @@ const ordersSlice = createSlice({
         state.error = action.error.message; // שמירת השגיאה במצב
       })
       .addCase(addNewOrderAsync.fulfilled, (state, action) => {
-                state.status = "succeeded"; // עדכון הסטטוס ל-"succeeded"
+        state.status = "succeeded"; // עדכון הסטטוס ל-"succeeded"
         // state.orders.push(action.payload);
       })
       .addCase(updateTheOrder.pending, (state) => {
@@ -116,7 +127,7 @@ const ordersSlice = createSlice({
       // כאשר הבקשה הושלמה בהצלחה
       .addCase(updateTheOrder.fulfilled, (state, action) => {
         state.status = "succeeded"; // עדכון הסטטוס ל-"succeeded"
-      
+
       })
       // כאשר הבקשה נכשלה
       .addCase(updateTheOrder.rejected, (state, action) => {

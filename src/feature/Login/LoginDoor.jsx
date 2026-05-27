@@ -4,26 +4,64 @@ import { useNavigate } from "react-router-dom";
 import "./LoginDoor.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllEmployees,login } from "../Employees/EmployeeSlice";
+import { getAllDoors } from "../Doors/DoorsSlice";
+import { checkAllLimits } from "../PossibleValues/PossibleValuesSlice";
+import { getAllOrders } from "../Orders/OrdersSlice";
+import { getAllFrames } from "../Frames/FramesSlice";
+import { getAllCustomers } from "../Customers/CustomerSlice";
 
 const LoginDoor = ({ onLogin }) => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [open, setOpen] = useState(false);
   const [showSign, setShowSign] = useState(false);
   const navigate = useNavigate(); // ה-navigate
+     const statusO = useSelector(state => state.orders.status)
+    const statusD = useSelector(state => state.doors.status)
+    const statusL = useSelector(state => state.possibleValues.status)
+    const statusC = useSelector(state => state.customers.status)
+    const statusF = useSelector(state => state.frames.status)
+    const statusE = useSelector(state => state.employees.status)   
+     const [loading, setLoading] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((p) => ({ ...p, [name]: value }));
   };
   const dis = useDispatch()
+    // useEffect(() => {
+    //     const load = async () => {
+    //         await dis(getAllEmployees())
+    //     };
+    //     load();
+    // }, []);
     useEffect(() => {
+        if (
+            statusO === "succeeded" &&
+            statusD === "succeeded" &&
+            statusL === "succeeded" &&
+            statusF === "succeeded" &&
+            statusC === "succeeded" &&
+            statusE === "succeeded"
+
+        ) {
+            setLoading(false);
+        }
+    }, [statusO, statusD, statusL, statusF, statusC, statusE]);
+
+  const emps = useSelector(state => state.employees.employees) ||[]
+  useEffect(() => {
         const load = async () => {
+            await dis(getAllDoors());
+            await dis(checkAllLimits());
+            await dis(getAllOrders());
+            await dis(getAllFrames());
+            await dis(getAllCustomers())
             await dis(getAllEmployees())
         };
+
         load();
     }, []);
 
-  const emps = useSelector(state => state.employees.employees) ||[]
   // const handleSubmit = (e) => {
   //   e.preventDefault();
   //   let emp = emps.find(e => e.password == form.password && e.name == form.username)

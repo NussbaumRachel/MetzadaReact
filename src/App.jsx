@@ -28,6 +28,7 @@ export default function App() {
       ) : (
         <>
           <Header /> {/* Header לא צריך Router */}
+
           <Routes>
             <Route path="/home" element={<HomePage />} />
             <Route path="/orders" element={<AllOrders />} />
@@ -46,7 +47,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/home" replace />} />
             <Route path="/order-details/:orderId" element={<OrderDetails />} />
             {/* <Route path="/employees" element={<AllEmployees />} /> */}
-            <Route path="/measurer" element={<MeasurerDashboard />} />
+            <Route path="/measurer" element={<AllOrders />} />
             {/* <Route path="/dashboard" element={<App2 />} /> */}
           </Routes>
           <FloatingChat />

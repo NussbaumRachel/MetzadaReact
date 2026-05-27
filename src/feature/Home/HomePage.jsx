@@ -776,292 +776,253 @@
 // }
 
 //-----------------------------------------------
-// HomePage.jsx
 
-// import { useState } from "react";
-// import "./HomePage.css";
+import { useState } from "react";
+import "./HomePage.css";
+import FloatingChat from "./FloatingChat";
+import { useNavigate } from "react-router-dom";
 
-// export default function HomePage() {
+export default function HomePage() {
 
-//     const [messages, setMessages] = useState([
-//         {
-//             type: "bot",
-//             text: "שלום, כיצד ניתן לעזור?"
-//         }
-//     ]);
+    const [messages, setMessages] = useState([
+        {
+            type: "bot",
+            text: "שלום, כיצד ניתן לעזור?"
+        }
+    ]);
 
-//     const [input, setInput] = useState("");
+    const [input, setInput] = useState("");
+    const navigate = useNavigate();
+    async function sendMessage() {
 
-//     async function sendMessage() {
+        if (!input.trim()) {
+            return;
+        }
 
-//         if (!input.trim()) {
-//             return;
-//         }
+        const userMessage = {
+            type: "user",
+            text: input
+        };
 
-//         const userMessage = {
-//             type: "user",
-//             text: input
-//         };
+        setMessages(prev => [...prev, userMessage]);
 
-//         setMessages(prev => [...prev, userMessage]);
+        const currentInput = input;
 
-//         const currentInput = input;
+        setInput("");
 
-//         setInput("");
+        try {
 
-//         try {
+            const response = await fetch(
+                "http://localhost:8000/chat",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        prompt: currentInput
+                    })
+                }
+            );
 
-//             const response = await fetch(
-//                 "http://localhost:8000/chat",
-//                 {
-//                     method: "POST",
-//                     headers: {
-//                         "Content-Type": "application/json"
-//                     },
-//                     body: JSON.stringify({
-//                         prompt: currentInput
-//                     })
-//                 }
-//             );
+            const data = await response.json();
 
-//             const data = await response.json();
+            setMessages(prev => [
+                ...prev,
+                {
+                    type: "bot",
+                    text: data.reply
+                }
+            ]);
 
-//             setMessages(prev => [
-//                 ...prev,
-//                 {
-//                     type: "bot",
-//                     text: data.reply
-//                 }
-//             ]);
+        } catch {
 
-//         } catch {
+            setMessages(prev => [
+                ...prev,
+                {
+                    type: "bot",
+                    text: "שגיאה בחיבור לשרת"
+                }
+            ]);
+        }
+    }
 
-//             setMessages(prev => [
-//                 ...prev,
-//                 {
-//                     type: "bot",
-//                     text: "שגיאה בחיבור לשרת"
-//                 }
-//             ]);
-//         }
-//     }
+    function handleKeyDown(e) {
 
-//     function handleKeyDown(e) {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    }
 
-//         if (e.key === "Enter") {
-//             sendMessage();
-//         }
-//     }
+    return (
 
-//     return (
+        <main className="modern-home">
 
-//         <main className="modern-home">
+            {/* HEADER PLACEHOLDER */}
 
-//             {/* HEADER PLACEHOLDER */}
+            <div id="header-placeholder"></div>
 
-//             <div id="header-placeholder"></div>
+            {/* HERO */}
 
-//             {/* HERO */}
+            <section className="hero">
 
-//             <section className="hero">
+                <div className="hero-blur"></div>
 
-//                 <div className="hero-blur"></div>
+                <div className="hero-content">
 
-//                 <div className="hero-content">
+                    <span className="hero-badge">
+                        AI Powered Factory System
+                    </span>
 
-//                     <span className="hero-badge">
-//                         AI Powered Factory System
-//                     </span>
+                    <h1 className="hero-title">
+                        ניהול מפעל דלתות
+                        <br />
+                        ברמה אחרת
+                    </h1>
 
-//                     <h1 className="hero-title">
-//                         ניהול מפעל דלתות
-//                         <br />
-//                         ברמה אחרת
-//                     </h1>
+                    <p className="hero-subtitle">
+                        שליטה מלאה על הזמנות, ייצור, לקוחות ועובדים
+                        במערכת מהירה, חכמה ומתקדמת.
+                    </p>
 
-//                     <p className="hero-subtitle">
-//                         שליטה מלאה על הזמנות, ייצור, לקוחות ועובדים
-//                         במערכת מהירה, חכמה ומתקדמת.
-//                     </p>
+                    <div className="hero-buttons">
 
-//                     <div className="hero-buttons">
+                        <button className="primary-btn">
+                            כניסה למערכת
+                        </button>
 
-//                         <button className="primary-btn">
-//                             כניסה למערכת
-//                         </button>
+                        <button className="secondary-btn" onClick={() => navigate("/manager/dashboard")}>
+                            צפייה בדשבורד
+                        </button>
 
-//                         <button className="secondary-btn">
-//                             צפייה בדשבורד
-//                         </button>
+                    </div>
 
-//                     </div>
+                </div>
 
-//                 </div>
+                {/* FLOATING CARDS */}
 
-//                 {/* FLOATING CARDS */}
+                <div className="floating-card floating-1">
+                    <span>248</span>
+                    <p>הזמנות פעילות</p>
+                </div>
 
-//                 <div className="floating-card floating-1">
-//                     <span>248</span>
-//                     <p>הזמנות פעילות</p>
-//                 </div>
+                <div className="floating-card floating-2">
+                    <span>94%</span>
+                    <p>דיוק ייצור</p>
+                </div>
 
-//                 <div className="floating-card floating-2">
-//                     <span>94%</span>
-//                     <p>דיוק ייצור</p>
-//                 </div>
+                <div className="floating-card floating-3">
+                    <span>12</span>
+                    <p>קווי ייצור</p>
+                </div>
 
-//                 <div className="floating-card floating-3">
-//                     <span>12</span>
-//                     <p>קווי ייצור</p>
-//                 </div>
+            </section>
 
-//             </section>
+            {/* FEATURES */}
 
-//             {/* FEATURES */}
+            <section className="features">
 
-//             <section className="features">
+                <div className="feature-box">
+                    <div className="feature-icon">📦</div>
+                    <h3>הזמנות</h3>
+                </div>
 
-//                 <div className="feature-box">
-//                     <div className="feature-icon">📦</div>
-//                     <h3>הזמנות</h3>
-//                 </div>
+                <div className="feature-box">
+                    <div className="feature-icon">🚪</div>
+                    <h3>דלתות</h3>
+                </div>
 
-//                 <div className="feature-box">
-//                     <div className="feature-icon">🚪</div>
-//                     <h3>דלתות</h3>
-//                 </div>
+                <div className="feature-box">
+                    <div className="feature-icon">📊</div>
+                    <h3>דשבורד</h3>
+                </div>
 
-//                 <div className="feature-box">
-//                     <div className="feature-icon">📊</div>
-//                     <h3>דשבורד</h3>
-//                 </div>
+                <div className="feature-box">
+                    <div className="feature-icon">👷</div>
+                    <h3>עובדים</h3>
+                </div>
 
-//                 <div className="feature-box">
-//                     <div className="feature-icon">👷</div>
-//                     <h3>עובדים</h3>
-//                 </div>
+            </section>
 
-//             </section>
+            {/* AI CHAT */}
 
-//             {/* AI CHAT */}
+            {/* <section className="ai-wrapper">
 
-//             <section className="ai-wrapper">
+                <div className="ai-header">
 
-//                 <div className="ai-header">
+                    <div>
+                        <h2>AI Assistant</h2>
+                        <p>
+                            מחובר לשרת Python
+                        </p>
+                    </div>
 
-//                     <div>
-//                         <h2>AI Assistant</h2>
-//                         <p>
-//                             מחובר לשרת Python
-//                         </p>
-//                     </div>
+                    <div className="ai-status">
+                        Online
+                    </div>
 
-//                     <div className="ai-status">
-//                         Online
-//                     </div>
+                </div> */}
 
-//                 </div>
+                         <FloatingChat />
 
-//                 <div className="chat-box">
 
-//                     {
-//                         messages.map((msg, index) => (
+            {/* </section> */}
 
-//                             <div
-//                                 key={index}
-//                                 className={
-//                                     msg.type === "bot"
-//                                         ? "bot-msg"
-//                                         : "user-msg"
-//                                 }
-//                             >
-//                                 {msg.text}
-//                             </div>
-
-//                         ))
-//                     }
-
-//                 </div>
-
-//                 <div className="chat-input-wrapper">
-
-//                     <input
-//                         type="text"
-//                         placeholder="כתוב הודעה..."
-//                         value={input}
-//                         onChange={(e) =>
-//                             setInput(e.target.value)
-//                         }
-//                         onKeyDown={handleKeyDown}
-//                         className="chat-input"
-//                     />
-
-//                     <button
-//                         onClick={sendMessage}
-//                         className="send-btn"
-//                     >
-//                         →
-//                     </button>
-
-//                 </div>
-
-//             </section>
-
-//         </main>
-//     );
-// }
+        </main>
+    );
+}
 
 
 //-------------------------------------------------
 
-import FloatingChat from "./FloatingChat";
-import "./HomePage.css";
+// import FloatingChat from "./FloatingChat";
+// import "./HomePage.css";
 
-export default function HomePage() {
+// export default function HomePage() {
 
-    const shortcuts = [
-        { title: "הזמנות", icon: "📦" },
-        { title: "לקוחות", icon: "👤" },
-        { title: "דלתות", icon: "🚪" },
-        { title: "עובדים", icon: "👷" },
-        { title: "דשבורד", icon: "📊" },
-        { title: "מלאי", icon: "📦" }
-    ];
+//     const shortcuts = [
+//         { title: "הזמנות", icon: "📦" },
+//         { title: "לקוחות", icon: "👤" },
+//         { title: "דלתות", icon: "🚪" },
+//         { title: "עובדים", icon: "👷" },
+//         { title: "דשבורד", icon: "📊" },
+//         { title: "מלאי", icon: "📦" }
+//     ];
 
-    return (
-        <div className="home">
+//     return (
+//         <div className="home">
 
-            <header className="top-hero">
+//             <header className="top-hero">
 
-                <h1>
-                    מערכת ניהול מפעל דלתות
-                </h1>
+//                 <h1>
+//                     מערכת ניהול מפעל דלתות
+//                 </h1>
 
-                <p>
-                    שליטה מלאה, מהירה ונקייה על כל התהליכים
-                </p>
+//                 <p>
+//                     שליטה מלאה, מהירה ונקייה על כל התהליכים
+//                 </p>
 
-                <div className="hero-actions">
-                    <button>כניסה לדשבורד</button>
-                    <button className="ghost">ניהול הזמנות</button>
-                </div>
+//                 <div className="hero-actions">
+//                     <button>כניסה לדשבורד</button>
+//                     <button className="ghost">ניהול הזמנות</button>
+//                 </div>
 
-            </header>
+//             </header>
 
-            <section className="shortcuts">
+//             <section className="shortcuts">
 
-                {shortcuts.map((s, i) => (
-                    <div key={i} className="shortcut-card">
-                        <div className="icon">{s.icon}</div>
-                        <div>{s.title}</div>
-                    </div>
-                ))}
+//                 {shortcuts.map((s, i) => (
+//                     <div key={i} className="shortcut-card">
+//                         <div className="icon">{s.icon}</div>
+//                         <div>{s.title}</div>
+//                     </div>
+//                 ))}
 
-            </section>
+//             </section>
 
-            {/* צאט גלובלי */}
-            <FloatingChat />
+//             {/* צאט גלובלי */}
+//             <FloatingChat />
 
-        </div>
-    );
-}
+//         </div>
+//     );
+// }

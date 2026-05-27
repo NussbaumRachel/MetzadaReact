@@ -217,6 +217,29 @@ export default function Dashboard() {
       }));
   }, [customers]);
   const navigate = useNavigate();
+  // חישוב מספר הלקוחות לכל עובד
+  const customersPerEmployee = useMemo(() => {
+  const map = {};
+
+  customers.forEach((c) => {
+    const empId = c.employeeId;
+
+    if (!empId) return;
+
+    map[empId] = (map[empId] || 0) + 1;
+  });
+
+  return Object.entries(map).map(([empId, value]) => {
+    const employee = employees.find(
+      (e) => String(e.id) === String(empId)
+    );
+
+    return {
+      name: employee?.name || `עובד ${empId}`,
+      value,
+    };
+  });
+}, [customers, employees]);
   // פילוח הכנסות לפי מחלקות עובדים
   const revenueByDepartment = useMemo(() => {
     const map = {};
@@ -373,6 +396,45 @@ export default function Dashboard() {
           </ResponsiveContainer>
 
         </Box>
+        <Box title="לקוחות לפי עובד">
+
+  <ResponsiveContainer width="100%" height={260}>
+
+    <BarChart
+      data={customersPerEmployee}
+      layout="vertical"
+      margin={{ top: 10, right: 20, left: 40, bottom: 10 }}
+    >
+
+      <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+
+      <XAxis type="number" />
+
+      <YAxis
+        type="category"
+        dataKey="name"
+        width={100}
+      />
+
+      <Tooltip />
+
+      <Bar
+        dataKey="value"
+        radius={[0, 8, 8, 0]}
+      >
+        {customersPerEmployee.map((_, i) => (
+          <Cell
+            key={i}
+            fill={COLORS[i % COLORS.length]}
+          />
+        ))}
+      </Bar>
+
+    </BarChart>
+
+  </ResponsiveContainer>
+
+</Box>
       </div>
 
       {/* ================= SECOND ROW ================= */}
@@ -458,6 +520,18 @@ export default function Dashboard() {
           </div>
 
         </Box>
+           <Box title="עובדים לפי סטטוס">
+          <ResponsiveContainer width="100%" height={150}>
+            <PieChart>
+              <Pie data={employeesByStatus} dataKey="value" outerRadius={50} innerRadius={10} label>
+                {employeesByStatus.map((_, i) => (
+                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </Box>
         {/* <Box title="שיעור הזמנות">
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
@@ -497,18 +571,7 @@ export default function Dashboard() {
             </PieChart>
           </ResponsiveContainer>
         </Box>
-        <Box title="עובדים לפי סטטוס">
-          <ResponsiveContainer width="100%" height={150}>
-            <PieChart>
-              <Pie data={employeesByStatus} dataKey="value" outerRadius={50} innerRadius={10} label>
-                {employeesByStatus.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </Box>
+     
       </div>
     </div>
   );

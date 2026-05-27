@@ -28,9 +28,9 @@ function AllOrders() {
     const [filter, setFilter] = useState("הכול");
     const menuItems = ["הזמנות", "דלתות", "משקופים", "לקוחות"];
     const [customerSearch, setCustomerSearch] = useState("");
-//     const filteredByCustomer = filteredOrders.filter(order =>
-//     order.custName.toLowerCase().includes(customerSearch.toLowerCase())
-// );
+    //     const filteredByCustomer = filteredOrders.filter(order =>
+    //     order.custName.toLowerCase().includes(customerSearch.toLowerCase())
+    // );
     // הוסף ל-state
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -52,7 +52,7 @@ function AllOrders() {
                 year: 'numeric',
             }
         );
-return formattedDate;
+        return formattedDate;
 
         // const date = new Date(dateStr);
         // const day = String(date.getDate()).padStart(2, '0');
@@ -179,8 +179,9 @@ return formattedDate;
                                     <button className="action-btn" onClick={() => openEdit(order)}>עריכה</button> </div> </td></tr>))} </tbody> </table> </div> </main>
         {active === "הזמנה חדשה" ? (
             <Modal isOpen={true} onClose={() => setActive("הזמנות")}>
-                <AddOrder />
-            </Modal>
+                <AddOrder
+                    onSuccess={() => setActive("הזמנות")}
+                />            </Modal>
         ) : (
             <div>
                 {/* הצגת רשימת הזמנות */}
@@ -236,7 +237,7 @@ return formattedDate;
         <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)}>
             <h2>עריכת הזמנה</h2>
             {selectedOrder && (
-                <AddOrder existingOrder={selectedOrder} />
+                <AddOrder existingOrder={selectedOrder} onSuccess={() => setIsEditOpen(false)} />
             )}
         </Modal>
     </div>);
