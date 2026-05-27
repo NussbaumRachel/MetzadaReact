@@ -9,13 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { log } from "three/src/utils.js";
 import Modal from "../Modals/Modal";
 import AddCustomer from "../Customers/CustomerForm"; // או הנתיב הנכון אצלך
-<<<<<<< HEAD
 // import { useSelector } from "react-redux";
 const AddOrder = ({ existingOrder }) => {
-=======
-
-const AddOrder = ({ existingOrder, onSuccess }) => {
->>>>>>> 292d3b8 (Rachel finally 1!)
   const navigate = useNavigate();
 
   // const goToAddCustomer = () => {
