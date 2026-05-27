@@ -92,7 +92,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createCustomer, updateCustomer } from "./CustomerSlice";
-
+import { useSelector } from "react-redux";
 export default function CustomerForm({ existing, onSave, defaultName = "" }) {
 
 const location = useLocation();
@@ -116,6 +116,7 @@ const [form, setForm] = useState({
 });
 
 const [errors, setErrors] = useState({});
+  const employeeId = useSelector(state => state.employees.user.id);
 
 useEffect(() => {
     if (existing) {
@@ -200,7 +201,8 @@ const addCustomer = () => {
 
         notes: form.notes || "",
         createdAt: form.createdAt || new Date().toISOString(),
-        employeeId: form.employeeId || employeeId,
+
+        employeeId: form.employeeId || employeeId, 
     };
 
     !form.id
@@ -212,7 +214,7 @@ const addCustomer = () => {
 
 return (
     <>
-    <style>{`
+    {/* <style>{`
     .customer-form{
         display:flex;
         flex-direction:column;
@@ -268,7 +270,7 @@ return (
         transform:translateY(-2px);
         box-shadow:0 10px 20px rgba(0,0,0,0.25);
     }
-    `}</style>
+    `}</style> */}
     <div className="customer-form">
         <h2>
             {form.id ? "עריכת לקוח" : "לקוח חדש"}
