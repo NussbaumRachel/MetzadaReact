@@ -1,4 +1,5 @@
 // CustomerForm.jsx
+
 import { useState, useEffect, use } from "react";
 import { useLocation } from "react-router-dom";
 // import Modal from "../Modals/Modal";
@@ -210,29 +211,23 @@ const addCustomer = () => {
 };
 
 return (
-
     <>
-    
     <style>{`
-
     .customer-form{
         display:flex;
         flex-direction:column;
         gap:14px;
         direction:rtl;
     }
-
     .customer-form h2{
         margin-bottom:10px;
         color:#fff;
     }
-
     .customer-form label{
         font-size:14px;
         color:#d6d6d6;
         margin-bottom:-8px;
     }
-
     .customer-form input{
         height:48px;
         border-radius:14px;
@@ -243,24 +238,20 @@ return (
         font-size:14px;
         transition:0.25s;
     }
-
     .customer-form input:focus{
         outline:none;
         border-color:#5f7740;
         box-shadow:0 0 0 4px rgba(95,119,64,0.18);
     }
-
     .customer-form input.error-input{
         border-color:#a63d4d;
         background:#2a161b;
     }
-
     .error-text{
         color:#ff8f9c;
         font-size:12px;
         margin-top:-8px;
     }
-
     .save-btn{
         margin-top:10px;
         height:50px;
@@ -273,22 +264,16 @@ return (
         cursor:pointer;
         transition:0.3s;
     }
-
     .save-btn:hover{
         transform:translateY(-2px);
         box-shadow:0 10px 20px rgba(0,0,0,0.25);
     }
-
     `}</style>
-
     <div className="customer-form">
-
         <h2>
             {form.id ? "עריכת לקוח" : "לקוח חדש"}
         </h2>
-
         <label>שם</label>
-
         <input
             name="name"
             value={form.name}
@@ -296,13 +281,10 @@ return (
             placeholder="שם"
             className={errors.name ? "error-input" : ""}
         />
-
         {errors.name && (
             <span className="error-text">{errors.name}</span>
         )}
-
         <label>טלפון</label>
-
         <input
             name="phone"
             value={form.phone}
@@ -310,13 +292,10 @@ return (
             placeholder="טלפון"
             className={errors.phone ? "error-input" : ""}
         />
-
         {errors.phone && (
             <span className="error-text">{errors.phone}</span>
         )}
-
         <label>אימייל</label>
-
         <input
             name="email"
             value={form.email}
@@ -324,31 +303,24 @@ return (
             placeholder="אימייל"
             className={errors.email ? "error-input" : ""}
         />
-
         {errors.email && (
             <span className="error-text">{errors.email}</span>
         )}
-
         <label>כתובת</label>
-
         <input
             name="address"
             value={form.address}
             onChange={handleChange}
             placeholder="כתובת"
         />
-
         <label>איש קשר</label>
-
         <input
             name="contactPersonName"
             value={form.contactPersonName}
             onChange={handleChange}
             placeholder="שם איש קשר"
         />
-
         <label>טלפון איש קשר</label>
-
         <input
             name="contactPersonPhone"
             value={form.contactPersonPhone}
@@ -356,15 +328,12 @@ return (
             placeholder="טלפון איש קשר"
             className={errors.contactPersonPhone ? "error-input" : ""}
         />
-
         {errors.contactPersonPhone && (
             <span className="error-text">
                 {errors.contactPersonPhone}
             </span>
         )}
-
         <label>מספר זיהוי</label>
-
         <input
             name="cn"
             value={form.cn}
@@ -372,20 +341,16 @@ return (
             placeholder="מספר זיהוי"
             className={errors.cn ? "error-input" : ""}
         />
-
         {errors.cn && (
             <span className="error-text">{errors.cn}</span>
         )}
-
         <button
             className="save-btn"
             onClick={addCustomer}
         >
             שמור
         </button>
-
     </div>
-
     </>
 );
 }
