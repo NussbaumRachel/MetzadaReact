@@ -43,6 +43,7 @@ export const addNewOrderAsync = createAsyncThunk(
       orderItems: [],
       orderDate: order.existingOrder?.orderDate || new Date().toISOString(),
       updateDate: new Date().toISOString(),
+      employeeId: order.existingOrder?.employeeId || order.employeeId,
       // new Date().toLocaleDateString('he-IL').toISOString(),
     };
 
@@ -63,7 +64,6 @@ export const addNewOrderAsync = createAsyncThunk(
     console.log(newOrder, "before adding order");
     console.log("order.existingOrder", order.existingOrder);
     if (order.existingOrder == null) {
-      newOrder.employeeId = useSelector(state => state.employees.user?.id) || 0;
       await dispatch(createOrder(newOrder));
       await dispatch(getAllOrders());
 

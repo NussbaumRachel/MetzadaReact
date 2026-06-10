@@ -10,9 +10,9 @@ import { log } from "three/src/utils.js";
 import Modal from "../Modals/Modal";
 import AddCustomer from "../Customers/CustomerForm"; // או הנתיב הנכון אצלך
 // import { useSelector } from "react-redux";
-const AddOrder = ({ existingOrder }) => {
+const AddOrder = ({ existingOrder ,onSuccess}) => {
   const navigate = useNavigate();
-
+  const [errors, setErrors] = useState({});
   // const goToAddCustomer = () => {
   //   navigate("/add-customer", {
   //     state: { name: search, setIsFormOpen: true }
@@ -25,6 +25,69 @@ const AddOrder = ({ existingOrder }) => {
   const [filteredCustomers, setFilteredCustomers] = useState(custs);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isChange, setIsChange] = useState(false)
+  const validateOrder = () => {
+
+  const newErrors = {};
+
+  // לקוח
+  if (!search.trim()) {
+    newErrors.custName = "יש לבחור לקוח";
+  }
+
+  // תאריך אספקה
+  if (!order.deliveryDate) {
+    newErrors.deliveryDate = "יש להזין תאריך אספקה";
+  }
+
+  // רחוב
+  if (!order.street?.trim()) {
+    newErrors.street = "יש להזין רחוב";
+  }
+
+  // בניין
+  if (!order.buildingNum?.toString().trim()) {
+    newErrors.buildingNum = "יש להזין מספר בניין";
+  }
+
+  // קומה
+  if (
+    order.floor &&
+    isNaN(order.floor)
+  ) {
+    newErrors.floor = "קומה חייבת להיות מספר";
+  }
+
+  // דירה
+  if (
+    order.apartmentNum &&
+    isNaN(order.apartmentNum)
+  ) {
+    newErrors.apartmentNum = "מספר דירה לא תקין";
+  }
+
+  // מחיר
+  if (!order.price) {
+    newErrors.price = "יש להזין מחיר";
+  }
+  else if (Number(order.price) <= 0) {
+    newErrors.price = "מחיר חייב להיות גדול מ־0";
+  }
+
+  // סטטוס
+  if (!order.status) {
+    newErrors.status = "יש לבחור סטטוס";
+  }
+
+  // // פריטים
+  // if (!order.orderItems.length) {
+  //   newErrors.orderItems = "יש להוסיף לפחות פריט אחד";
+  // }
+
+  setErrors(newErrors);
+
+  return Object.keys(newErrors).length === 0;
+};
+
   const goToAddCustomer = () => {
     setIsAddCustomerOpen(true);
   };
@@ -141,14 +204,20 @@ const AddOrder = ({ existingOrder }) => {
       };
     });
   };
+    const employeeId = useSelector(state => state.employees.user?.id) || 0;
 
   const createOrd = async (e) => {
     e.preventDefault();
+
+    if (!validateOrder()) {
+      return;
+    }
     const finalOrder = {
       ...order,
       orderDate: new Date().toISOString().split('T')[0], // תאריך הזמנה הוא היום
       orderItems: order.orderItems,
-      custId: custs.find(c => c.name == order.custName)?.id
+      custId: custs.find(c => c.name == order.custName)?.id,
+      employeeId: order.employeeId || employeeId,
     };
     // dis(addNewOrderAsync(finalOrder));
     try {
@@ -169,197 +238,220 @@ const AddOrder = ({ existingOrder }) => {
     }
   };
 
-  dis(addNewOrderAsync(finalOrder));
-};
-
-  return (
-    <div className="add-order-container">
-      <h2>הוסף הזמנה חדשה</h2>
-
-      <form className="order-form">
+  // dis(addNewOrderAsync(finalOrder));
 
 
+return (
+  <div className="add-order-container">
+    <h2>הוסף הזמנה חדשה</h2>
 
-
-
-{/* /////////////שם לקוח עם אוטוקומפליט וטעינת לקוחות מהסטור + כפתור להוספת לקוח אם לא נמצא + טיפול בשגיאות אם לא נבחר לקוח */}
+    <form className="order-form">
 
 
 
 
-        <div className="form-group autocomplete">
 
-  <label>שם לקוח</label>
-          <div className="input-with-btn">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setShowDropdown(true);
-            
+      {/* /////////////שם לקוח עם אוטוקומפליט וטעינת לקוחות מהסטור + כפתור להוספת לקוח אם לא נמצא + טיפול בשגיאות אם לא נבחר לקוח */}
+
+
+
+
+      <div className="form-group autocomplete">
+
+        <label>שם לקוח</label>
+        <div className="input-with-btn">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setShowDropdown(true);
+
               setErrors(prev => ({
-          ...prev,
-          custName: ""
-        }));
-      }}
-      onFocus={() => setShowDropdown(true)}
-      className={errors.custName ? "input-error" : ""}
+                ...prev,
+                custName: ""
+              }));
+            }}
+            onFocus={() => setShowDropdown(true)}
+            className={errors.custName ? "input-error" : ""}
+          />
+
+          {search && filteredCustomers.length === 0 && (
+            <button
+              type="button"
+              className="add-btn"
+              onClick={goToAddCustomer}
+            >
+              לא נמצא, הוסף לקוח חדש
+            </button>
+          )}
+        </div>
+        {errors.custName && (
+          <span className="error-text">
+            {errors.custName}
+          </span>
+        )}
+        {showDropdown && filteredCustomers.length > 0 && (
+          <ul className="dropdown">
+            {filteredCustomers.map(c => (
+              <li key={c.id} onClick={() => selectCustomer(c)}>
+                {c.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="deliveryDate">תאריך אספקה</label>
+        <input
+          type="date"
+          id="deliveryDate"
+          name="deliveryDate"
+          value={order.deliveryDate}
+          onChange={handleInputChange}
+          required
+          className={`form-input ${errors.deliveryDate ? "input-error" : ""}`}
+        />
+        {errors.deliveryDate && (
+          <span className="error-text">
+            {errors.deliveryDate}
+          </span>
+        )}
+      </div>
+
+
+
+
+
+
+
+      <div className="form-grid">
+        {addressFields.map(f => (
+
+          <div className="form-group" key={f.name}>
+
+            <label>{f.label}</label>
+
+            <input
+              type={f.type}
+              name={f.name}
+              value={order[f.name]}
+              onChange={(e) => {
+
+                handleInputChange(e);
+
+                setErrors(prev => ({
+                  ...prev,
+                  [f.name]: ""
+                }));
+              }}
+
+              className={errors[f.name] ? "input-error" : ""}
             />
 
-            {search && filteredCustomers.length === 0 && (
-              <button
-                type="button"
-                className="add-btn"
-                onClick={goToAddCustomer}
-              >
-                לא נמצא, הוסף לקוח חדש
-              </button>
+            {errors[f.name] && (
+              <span className="error-text">
+                {errors[f.name]}
+              </span>
             )}
+
           </div>
-{errors.custName && (
-    <span className="error-text">
-      {errors.custName}
-    </span>
-  )}
-          {showDropdown && filteredCustomers.length > 0 && (
-            <ul className="dropdown">
-              {filteredCustomers.map(c => (
-                <li key={c.id} onClick={() => selectCustomer(c)}>
-                  {c.name}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div> 
 
-        <div className="form-group">
-          <label htmlFor="deliveryDate">תאריך אספקה</label>
-          <input
-            type="date"
-            id="deliveryDate"
-            name="deliveryDate"
-            value={order.deliveryDate}
-            onChange={handleInputChange}
-            required
-            className={`form-input ${errors.deliveryDate ? "input-error" : ""}`}
-          />
-          {errors.deliveryDate && (
-  <span className="error-text">
-    {errors.deliveryDate}
-  </span>
-)}
+        ))}
+
+
+
+        <div className="form-group full">
+          <label>מחיר כולל</label>
+          <input type="number" name="price" value={order.price} onChange={handleInputChange} />
         </div>
+        {/* כאן יהיה אינפוט מסוג סלקט של סטטוס ההזמנה */}
+        <div className="form-group">
+          <label>סטטוס הזמנה</label>
+          <select name="status" value={order.status} onChange={handleInputChange}>
+            <option value="opening">פתוחה</option>
+            <option value="closed">סגורה</option>
+            <option value="in_progress">בתהליך</option>
+            <option value="completed">הושלמה</option>
+          </select>
+        </div>
+      </div>
 
+      <div className="form-group full">
+        <label>הערות</label>
+        <textarea name="notes" value={order.notes} onChange={handleInputChange} />
+      </div>
 
+      <div>
+        {order.orderItems.map((item, index) => (
+          <div key={index} onClick={() => toggleItem(index)} className="item-summary" style={{ cursor: "pointer" }}>
+            <strong>סוג פריט:</strong> {item.itemType}
 
+            {/* {expandedItems.includes(item.itemId) || item == {} && ( */}
+            <OrderItem
+              index={index}
+              item={item}
+              updateItem={updateItem}
+              isOrder={true}
+              isNew={false}
+            />
+            {/* )} */}
+          </div>
+        ))}
+        <button type="button" onClick={addOrderItem}>
+          הוסף פריט
+        </button>
+      </div>
 
+      <div className="form-actions">
+        <button className="btn-submit" onClick={createOrd} >
+          שלח הזמנה
+        </button>
+      </div>
 
+    </form>
+  <style>{`
 
+.input-error{
+    border:1px solid #a63d4d !important;
 
-<div className="form-grid">
-{addressFields.map(f => (
+    background:#2a161b !important;
 
-  <div className="form-group" key={f.name}>
+    box-shadow:
+        0 0 0 3px rgba(166,61,77,0.15);
+}
 
-    <label>{f.label}</label>
+.error-text{
+    color:#ff9cab;
 
-    <input
-      type={f.type}
-      name={f.name}
-      value={order[f.name]}
-      onChange={(e) => {
+    font-size:12px;
 
-        handleInputChange(e);
+    margin-top:5px;
 
-        setErrors(prev => ({
-          ...prev,
-          [f.name]: ""
-        }));
-      }}
+    display:block;
 
-      className={errors[f.name] ? "input-error" : ""}
-    />
+    font-weight:600;
+}
 
-    {errors[f.name] && (
-      <span className="error-text">
-        {errors[f.name]}
-      </span>
+`}</style>
+    {isAddCustomerOpen && (
+      <Modal isOpen={isAddCustomerOpen} onClose={() => setIsAddCustomerOpen(false)}>
+        <AddCustomer
+          // onSuccess={(newCustomer) => {
+          //   setSearch(newCustomer.name);
+          //   setIsAddCustomerOpen(false);
+          // }}
+          onSave={() => setIsAddCustomerOpen(false)}
+
+          onClose={() => setIsAddCustomerOpen(false)}
+          defaultName={search}
+        />
+      </Modal>
     )}
 
   </div>
-
-))}
-
-  
-          
-          <div className="form-group full">
-            <label>מחיר כולל</label>
-            <input type="number" name="price" value={order.price} onChange={handleInputChange} />
-          </div>
-          {/* כאן יהיה אינפוט מסוג סלקט של סטטוס ההזמנה */}
-          <div className="form-group">
-            <label>סטטוס הזמנה</label>
-            <select name="status" value={order.status} onChange={handleInputChange}>
-              <option value="opening">פתוחה</option>
-              <option value="closed">סגורה</option>
-              <option value="in_progress">בתהליך</option>
-              <option value="completed">הושלמה</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="form-group full">
-          <label>הערות</label>
-          <textarea name="notes" value={order.notes} onChange={handleInputChange} />
-        </div>
-
-        <div>
-          {order.orderItems.map((item, index) => (
-            <div key={index} onClick={() => toggleItem(index)} className="item-summary" style={{ cursor: "pointer" }}>
-              <strong>סוג פריט:</strong> {item.itemType}
-
-              {/* {expandedItems.includes(item.itemId) || item == {} && ( */}
-              <OrderItem
-                index={index}
-                item={item}
-                updateItem={updateItem}
-                isOrder={true}
-                isNew={false}
-              />
-              {/* )} */}
-            </div>
-          ))}
-          <button type="button" onClick={addOrderItem}>
-            הוסף פריט
-          </button>
-        </div>
-
-        <div className="form-actions">
-          <button className="btn-submit" onClick={createOrd} >
-            שלח הזמנה
-          </button>
-        </div>
-
-      </form>
-
-      {isAddCustomerOpen && (
-        <Modal isOpen={isAddCustomerOpen} onClose={() => setIsAddCustomerOpen(false)}>
-          <AddCustomer
-            // onSuccess={(newCustomer) => {
-            //   setSearch(newCustomer.name);
-            //   setIsAddCustomerOpen(false);
-            // }}
-            onSave={() => setIsAddCustomerOpen(false)}
-
-            onClose={() => setIsAddCustomerOpen(false)}
-            defaultName={search}
-          />
-        </Modal>
-      )}
-
-    </div>
-  );
+);
 };
 
 export default AddOrder;

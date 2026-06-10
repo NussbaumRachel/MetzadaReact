@@ -74,7 +74,7 @@ export default function Employee({ employee, onClose, onSave }) {
                             onChange={handleChange}
                         />
                         <select
-                            name="role"
+                            name="status"
                             value={form.status || "עובד"} // ברירת מחדל לתפקיד "עובד"
                             onChange={handleChange}
                         >

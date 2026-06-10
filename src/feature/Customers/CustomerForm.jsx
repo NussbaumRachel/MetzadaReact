@@ -1,10 +1,7 @@
 // CustomerForm.jsx
 
-import { useState, useEffect, use } from "react";
-import { useLocation } from "react-router-dom";
 // import Modal from "../Modals/Modal";
 import {Modal} from "../Modals/modal.css";
-import { useDispatch, useSelector } from "react-redux";
 // import { useState, useEffect } from "react";
 // import { useLocation } from "react-router-dom";
 // // import Modal from "../Modals/Modal";
@@ -93,6 +90,7 @@ import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createCustomer, updateCustomer } from "./CustomerSlice";
 import { useSelector } from "react-redux";
+import { getCustomers } from "../../Api/CustomersApi";
 export default function CustomerForm({ existing, onSave, defaultName = "" }) {
 
 const location = useLocation();
@@ -116,7 +114,6 @@ const [form, setForm] = useState({
 });
 
 const [errors, setErrors] = useState({});
-  const employeeId = useSelector(state => state.employees.user.id);
 
 useEffect(() => {
     if (existing) {
@@ -186,28 +183,28 @@ function validateForm() {
 
     return Object.keys(newErrors).length === 0;
 }
-
-const addCustomer = () => {
+const employeeId = useSelector(state => state.employees.user.id);
+const addCustomer = async () => {
 
     if (!validateForm()) {
         return;
     }
-    const employeeId = useSelector(state => state.employees.user.id);
+    
     const newCustomer = {
         ...form,
         id: form.id
             ? form.id
             : (Date.now() % 1000000000).toString(),
-
         notes: form.notes || "",
         createdAt: form.createdAt || new Date().toISOString(),
-
         employeeId: form.employeeId || employeeId, 
-    };
+    }
 
-    !form.id
-        ? dispatch(createCustomer(newCustomer))
-        : dispatch(updateCustomer(newCustomer));
+     if (!form.id) {
+        await dispatch(createCustomer(newCustomer));
+    } else {
+        await dispatch(updateCustomer(newCustomer));
+    }
 
     onSave(newCustomer);
 };

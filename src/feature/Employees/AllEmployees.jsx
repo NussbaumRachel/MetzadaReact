@@ -63,7 +63,7 @@ export default function AllEmployees() {
        ...employee,
        id: employee.id ? employee.id : (Date.now() % 1000000000).toString(), // יצירת ID ייחודי אם אין ID קיים, מבצע מודולו כדי לקבל מספר באורך 9 תווים
      };
-     !employee.id ? dis(createEmployee(newEmployee)) : dis(updateEmployee(newEmployee));
+     !employee.id ? await dis(createEmployee(newEmployee)) : await dis(updateEmployee(newEmployee));
     setIsOpen(false);
     await dis(getAllEmployees());
       // onSave(false);

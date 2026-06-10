@@ -5,7 +5,8 @@ import Modal from "../Modals/Modal";
 // import { customersMock, ordersMock } from "./mockData";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
-import {deleteCustomerById} from "../../Api/CustomersApi";
+import {deleteCustomerById, getCustomers} from "../../Api/CustomersApi";
+import { get } from "react-hook-form";
 
 // const orders = ordersMock;
 
@@ -52,13 +53,15 @@ const customers = useSelector(state => state.customers.customers) || [];
       return matchSearch && matchFilter;
     });
   }, [search, filter, enrichedCustomers]);
-
+const dispatch = useDispatch();
   const handleDelete = async (id) => {
   
       // כאן ניתן להוסיף את הלוגיקה למחיקת הלקוח
         await deleteCustomerById(id);
+        await dispatch(getCustomers());
         setIsDeleteOpen(false);
         setSelectedCustomer(null);
+
         //setFilteredCustomers(filteredCustomers.filter(c => c.id !== id));
 
   };
@@ -271,6 +274,9 @@ const customers = useSelector(state => state.customers.customers) || [];
           onSave={() => {
             setIsFormOpen(false);
             setSelectedCustomer(null);
+            async function fetchCustomers() {
+              await dispatch(getCustomers());
+            }
           }}
         />
       </Modal>

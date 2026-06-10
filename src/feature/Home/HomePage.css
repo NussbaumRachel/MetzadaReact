@@ -316,7 +316,7 @@ body {
     gap: 12px;
 }
 
-.chat-input {
+/* .chat-input {
 
     flex: 1;
 
@@ -333,7 +333,7 @@ body {
     color: white;
 
     font-size: 15px;
-}
+} */
 
 .send-btn {
 
